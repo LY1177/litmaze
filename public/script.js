@@ -403,16 +403,19 @@ const labyrinths = {
     levels: {
       1: [
         [
-          [1, 1, 1],
-          [0, 0, 0],
-          [3, 1, 4]
+          [1, 1, 1, 1],
+          [1, 0, 0, 1],
+          [0, 0, 0, 1],
+          [3, 1, 0, 4]
         ]
       ],
       2: [
         [
-          [3, 0, 1],
-          [1, 0, 1],
-          [1, 0, 4]
+          [3, 0, 1, 1, 4],
+          [1, 0, 1, 0, 0],
+          [1, 0, 1, 0, 1],
+          [1, 0, 0, 0 ,1],
+          [1, 1, 1, 1, 1]
         ]
       ]
     }
@@ -422,14 +425,19 @@ const labyrinths = {
     levels: {
       1: [
         [
-          [0, 0, 0],
-          [3, 1, 4]
+          [1, 1, 1, 1],
+          [1, 0, 0, 1],
+          [0, 0, 0, 1],
+          [3, 1, 0, 4]
         ]
       ],
       2: [
         [
-          [3, 0, 1],
-          [1, 0, 4]
+          [3, 0, 1, 1, 4],
+          [1, 0, 1, 0, 0],
+          [1, 0, 1, 0, 1],
+          [1, 0, 0, 0 ,1],
+          [1, 1, 1, 1, 1]
         ]
       ]
     }
@@ -439,14 +447,19 @@ const labyrinths = {
     levels: {
       1: [
         [
-          [0, 0, 0],
-          [3, 1, 4]
+          [1, 1, 1, 1],
+          [1, 0, 0, 1],
+          [0, 0, 0, 1],
+          [3, 1, 0, 4]
         ]
       ],
       2: [
         [
-          [3, 0, 1],
-          [1, 0, 4]
+          [3, 0, 1, 1, 4],
+          [1, 0, 1, 0, 0],
+          [1, 0, 1, 0, 1],
+          [1, 0, 0, 0 ,1],
+          [1, 1, 1, 1, 1]
         ]
       ]
     }
@@ -474,9 +487,9 @@ const authorDisplayName = {
 
 // Функция за извличане на въпроси (примерен API)
 function getQuestionsForAuthor(authorName, callback) {
-  // fetch(`http://localhost:3000/api/questions?author=${encodeURIComponent(authorName)}`)
+  fetch(`http://localhost:3000/api/questions?author=${encodeURIComponent(authorName)}`)
      
-   fetch("https://litmaze.onrender.com/api/questions?author=" + encodeURIComponent(authorName))
+  //  fetch("https://litmaze.onrender.com/api/questions?author=" + encodeURIComponent(authorName))
     .then(r => r.json())
     .then(data => callback(data))
     .catch(err => console.error("Грешка при извличане на въпроси:", err));
@@ -521,29 +534,39 @@ function loadMazeLevel(authorKey, level) {
 }
 // За дългия текст
 function loadPassage(textId) {
-  // Извикваме API endpoint-а /api/texts с параметър id, като стойността на textId се кодират за сигурност.
+  console.log("Зареждам текст с id:", textId);
   fetch(`/api/texts?id=${encodeURIComponent(textId)}`)
-    // Преобразуваме отговора в JSON формат.
     .then(response => response.json())
-    // След успешното преобразуване, data се очаква да съдържа поле content.
     .then(data => {
-      // Намираме HTML елемента с id "passage-container"
+      console.log("Получих текст:", data.content);
       const passageContainer = document.getElementById('passage-container');
       if (passageContainer) {
-        // Задаваме неговия текстов контент със съдържанието от data.content
         passageContainer.textContent = data.content;
       }
+      const passageModal = document.getElementById('passage-modal');
+      if (passageModal) {
+        passageModal.classList.remove('hidden');
+        passageModal.classList.add('visible');
+      }
     })
-    // Ако възникне грешка по време на заявката или преобразуването, тя се отпечатва в конзолата.
-    .catch(err => console.error("Грешка при зареждането на текста:", err)); 
-    document.getElementById('close-passage-btn').addEventListener('click', () => {
+    .catch(err => console.error("Грешка при зареждането на текста:", err));
+}
+
+// Слушател за бутона за затваряне – добавете веднъж при DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+  const closeBtn = document.getElementById('close-passage-btn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
       const passageModal = document.getElementById('passage-modal');
       if (passageModal) {
         passageModal.classList.remove('visible');
         passageModal.classList.add('hidden');
       }
     });
-}
+  }
+});
+
+
 // Инициализация на revealedMaze
 function initRevealedMaze() {
   revealedMaze = [];
