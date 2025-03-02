@@ -1053,8 +1053,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Логин
   const loginModal = document.getElementById('login-modal');
-  document.getElementById('login-btn').addEventListener('click', () => {
+  // Добави този код след като DOM е зареден (например в DOMContentLoaded събитието)
+    document.getElementById('username').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    document.getElementById('login-btn').click();
+  }
+  });
+   document.getElementById('login-btn').addEventListener('click', () => {
     const username = document.getElementById('username').value.trim();
+    
     if (!username) {
       alert("Моля, въведете потребителско име.");
       return;
