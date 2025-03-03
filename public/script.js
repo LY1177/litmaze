@@ -1054,7 +1054,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Логин
   const loginModal = document.getElementById('login-modal');
   // Добави този код след като DOM е зареден (например в DOMContentLoaded събитието)
-    document.getElementById('username').addEventListener('keydown', function(e) {
+    document.getElementById('username').addEventListener('keydown', function( e ) {
   if (e.key === 'Enter') {
     document.getElementById('login-btn').click();
   }
