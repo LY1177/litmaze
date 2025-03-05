@@ -552,6 +552,7 @@
   line-height: 1.6;     /* За по-добра четимост */
   font-family: Arial, sans-serif;  /* Ако желаете различен шрифт */
   text-align: justify;
+  overflow-y: auto;
  
 }
 

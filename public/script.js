@@ -9,6 +9,7 @@ let revealedMaze = [];
 let playerPos = { row: 0, col: 0 };
 let currentAuthor = null;
 let gameQuestions = [];
+let musicPaused = false;
 const MAX_LEVEL = 5;
 
 // Примерни лабиринти за 12 автора (2 нива – примерно)
@@ -487,9 +488,9 @@ const authorDisplayName = {
 
 // Функция за извличане на въпроси (примерен API)
 function getQuestionsForAuthor(authorName, callback) {
-  // fetch(`http://localhost:3000/api/questions?author=${encodeURIComponent(authorName)}`)
+  fetch(`http://localhost:3000/api/questions?author=${encodeURIComponent(authorName)}`)
      
-   fetch("https://litmaze.onrender.com/api/questions?author=" + encodeURIComponent(authorName))
+  //  fetch("https://litmaze.onrender.com/api/questions?author=" + encodeURIComponent(authorName))
     .then(r => r.json())
     .then(data => callback(data))
     .catch(err => console.error("Грешка при извличане на въпроси:", err));
@@ -1038,19 +1039,33 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   
   // Обработка за бутона за музика (пауза/възпроизвеждане)
+  // const musicToggleBtn = document.getElementById('music-toggle-btn');
+  // if(musicToggleBtn){
+  //   musicToggleBtn.addEventListener('click', () => {
+  //     if (backgroundMusic.paused) {
+  //       backgroundMusic.play();
+  //       musicToggleBtn.textContent = "Пауза музика";
+  //     } else {
+  //       backgroundMusic.pause();
+  //       musicToggleBtn.textContent = "Възпроизведи музика";
+  //     }
+  //   });
+  // }
   const musicToggleBtn = document.getElementById('music-toggle-btn');
-  if(musicToggleBtn){
+  if (musicToggleBtn) {
     musicToggleBtn.addEventListener('click', () => {
       if (backgroundMusic.paused) {
         backgroundMusic.play();
+        musicPaused = false;
         musicToggleBtn.textContent = "Пауза музика";
       } else {
         backgroundMusic.pause();
+        musicPaused = true;
         musicToggleBtn.textContent = "Възпроизведи музика";
       }
     });
   }
-
+  
   // Логин
   const loginModal = document.getElementById('login-modal');
   // Добави този код след като DOM е зареден (например в DOMContentLoaded събитието)
@@ -1150,18 +1165,26 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('close-question-btn').addEventListener('click', closeQuestionModal);
   
   // Функция за избор на автор
-  function selectAuthor(author) {
-    currentAuthor = author;
+ // Глобална променлива, която следи състоянието на музиката (false = пуска се, true = е спряла)
+let musicPaused = false;
+
+function selectAuthor(author) {
+  currentAuthor = author;
+  // Пусни музиката само ако не е паузирана
+  if (!musicPaused) {
     backgroundMusic.play();
-    
-    // Скриваме екран с картите, показваме лабиринта
-    document.getElementById('author-selection').classList.add('hidden');
-    document.getElementById('game-container').classList.remove('hidden');
-    
-    // Сменяме заглавието
-    document.getElementById('labyrinth-title').textContent =
-      "Лабиринт: " + (authorDisplayName[currentAuthor] || currentAuthor);
-    
-    initMazeFromAuthor();
   }
+  
+  // Скриваме екран с картите, показваме лабиринта
+  document.getElementById('author-selection').classList.add('hidden');
+  document.getElementById('game-container').classList.remove('hidden');
+  
+  // Сменяме заглавието
+  document.getElementById('labyrinth-title').textContent =
+    "Лабиринт: " + (authorDisplayName[currentAuthor] || currentAuthor);
+  
+  initMazeFromAuthor();
+}
+
 });
+

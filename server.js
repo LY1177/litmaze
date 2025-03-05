@@ -103,46 +103,7 @@ app.get('/api/questions', (req, res) => {
   `;
   params = [authorName];
 }
-
-  // let sql, params;
-  // if (!authorName || authorName.trim().toLowerCase() === 'all' ||
-  //     authorName.trim().toLowerCase() === 'obobshtenie' ||
-  //     authorName.trim().toLowerCase() === 'обобщение') {
-  //   sql = `
-  //     SELECT q.id AS question_id,
-  //            q.question,
-  //            q.explanation,
-  //            q.type,
-  //            q.text_id,                  -- ВАЖНО: добавяме text_id тук
-  //            COALESCE(qo.label, '') AS label,
-  //            COALESCE(qo.option_text, '') AS option_text,
-  //            COALESCE(qo.is_correct, 0) AS is_correct,
-  //            COALESCE(qo.matching_key, '') AS matching_key
-  //     FROM questions q
-  //     LEFT JOIN question_options qo ON q.id = qo.question_id
-  //     ORDER BY q.id, qo.id
-  //   `;
-  //   params = [];
-  // } else {
-  //   sql = `
-  //     SELECT q.id AS question_id,
-  //            q.question,
-  //            q.explanation,
-  //            q.type,
-  //            q.text_id,                 -- И тук
-  //            COALESCE(qo.label, '') AS label,
-  //            COALESCE(qo.option_text, '') AS option_text,
-  //            COALESCE(qo.is_correct, 0) AS is_correct,
-  //            COALESCE(qo.matching_key, '') AS matching_key
-  //     FROM questions q
-  //     INNER JOIN authors a ON q.author_id = a.id
-  //     LEFT JOIN question_options qo ON q.id = qo.question_id
-  //     WHERE a.name = ?
-  //     ORDER BY q.id, qo.id
-  //   `;
-  //   params = [authorName];
-  // }
-  
+    
   db.all(sql, params, (err, rows) => {
     if (err) {
       console.error("Error fetching questions:", err);
@@ -249,3 +210,4 @@ app.use(express.static('public'));
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
