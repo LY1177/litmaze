@@ -762,7 +762,7 @@ function showQuestion(onCorrect) {
       answersDiv.appendChild(document.createElement('br'));
     });
   }
-  // За въпроси от тип true_false – използваме <span> и добавяме префикс, ако има
+  // За въпроси от тип true_false – използваме <span> и добавяме префикс
   else if (q.type === 'true_false') {
     (q.options || []).forEach(opt => {
       const btn = document.createElement('button');
@@ -1038,19 +1038,6 @@ document.addEventListener('DOMContentLoaded', () => {
     selectAuthor(selectedKey);
   });
   
-  // Обработка за бутона за музика (пауза/възпроизвеждане)
-  // const musicToggleBtn = document.getElementById('music-toggle-btn');
-  // if(musicToggleBtn){
-  //   musicToggleBtn.addEventListener('click', () => {
-  //     if (backgroundMusic.paused) {
-  //       backgroundMusic.play();
-  //       musicToggleBtn.textContent = "Пауза музика";
-  //     } else {
-  //       backgroundMusic.pause();
-  //       musicToggleBtn.textContent = "Възпроизведи музика";
-  //     }
-  //   });
-  // }
   const musicToggleBtn = document.getElementById('music-toggle-btn');
   if (musicToggleBtn) {
     musicToggleBtn.addEventListener('click', () => {

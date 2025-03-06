@@ -17,7 +17,7 @@ const db = new sqlite3.Database(path.join(__dirname, 'mydb.db'), (err) => {
   }
 });
 
-// Създаваме таблица за потребители, ако не съществува
+// Създаваме таблица за потребители
 db.run(`CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   username TEXT NOT NULL UNIQUE,
@@ -122,7 +122,7 @@ app.get('/api/questions', (req, res) => {
           options: []
         };
       }
-      // Ако има опции (label, option_text, matching_key)
+      // опции (label, option_text, matching_key)
       if (row.label !== '' || row.option_text !== '' || row.matching_key !== '') {
         questionsMap[row.question_id].options.push({
           label: row.label,
@@ -188,7 +188,7 @@ app.post('/login', (req, res) => {
       return res.status(400).send("Потребителското име не съществува.");
     }
     
-    // Проверка на паролата (plain text, за демонстрационни цели)
+    // Проверка на паролата (plain text)
     if (password !== user.password) {
       return res.status(400).send("Невалидна парола.");
     }

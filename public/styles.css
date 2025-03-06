@@ -7,7 +7,7 @@
     padding: 0;
     height: 100%;
     font-family: 'Baloo 2', cursive, sans-serif;
-    /* Запазваме фоновото изображение */
+    /* Фоновото изображение */
     background: url("images/game1.jpg") repeat center center;
   }
   
@@ -168,7 +168,7 @@
   /* Екран за лабиринт */
   #game-container {
     text-align: center;
-    /* вече не е 100vh, защото сме в #main-container */
+   
   }
   #top-bar {
     background-color: #ffa500;
@@ -320,7 +320,7 @@
     width: 48%;
     padding: 5px;
     font-size: 14px;
-    max-height: 250px; /* С леко по-голяма максимална височина */
+    max-height: 250px; 
     overflow-y: auto;
   }
   
@@ -331,7 +331,7 @@
     box-sizing: border-box;
   }
   
-  /* Заглавието "Въпрос" – леко по-голямо, с минимални отстояния */
+  /* Заглавието "Въпрос" –  с минимални отстояния */
   #question-title {
     font-size: 18px;
     margin: 0;
@@ -347,7 +347,7 @@
     padding: 6px 12px;
   }
   
-  /* Ако имате отделен контейнер за matching въпросите */
+  /* Контейнер за matching въпросите */
   #matching-container {
     width: 90%;
     max-width: 500px;
@@ -373,21 +373,7 @@
   }
 }
 
-  /* Медийна заявка за мобилни устройства */
-  /* @media (max-width: 768px) { */
-    /* .droppable-zone { */
-      /* Ако е необходимо, адаптирайте височината/ширината */
-      /* width: 100%; */
-      /* Може да зададем минимална височина, за да са добре видими */
-      /* min-height: 50px;
-    }
-    
-    .matching-right-item-row {
-      flex-direction: column;
-      align-items: stretch;
-    }
-  } */
-  @media (max-width: 768px) {
+   @media (max-width: 768px) {
     /* Подреждане на matching въпросите вертикално */
     .matching-wrapper {
       width: 90%;
@@ -550,7 +536,7 @@
   font-weight: normal;  /* Обикновено тегло */
   color: #333;          /* Тъмен, но не прекалено черен цвят */
   line-height: 1.6;     /* За по-добра четимост */
-  font-family: Arial, sans-serif;  /* Ако желаете различен шрифт */
+  font-family: Arial, sans-serif;  /* Различен шрифт */
   text-align: justify;
   overflow-y: auto;
  
