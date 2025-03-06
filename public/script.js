@@ -12,7 +12,7 @@ let gameQuestions = [];
 let musicPaused = false;
 const MAX_LEVEL = 5;
 
-// Примерни лабиринти за 12 автора (2 нива – примерно)
+// Лабиринти за 12 автора (3 нива)
 const labyrinths = {
   vazov: {
     name: "Иван Вазов",
@@ -467,7 +467,7 @@ const labyrinths = {
   },
 };
 
-// Мапинг на кратки имена към пълно име
+// Кратки имена към пълно име
 const authorDisplayName = {
   "vazov": "Иван Вазов",
   "aleko": "Алеко Константинов",
@@ -486,7 +486,7 @@ const authorDisplayName = {
   "nvo2024": "НВО 2024"
 };
 
-// Функция за извличане на въпроси (примерен API)
+// Функция за извличане на въпроси (API)
 function getQuestionsForAuthor(authorName, callback) {
   // fetch(`http://localhost:3000/api/questions?author=${encodeURIComponent(authorName)}`)
      
@@ -623,7 +623,7 @@ function renderMaze() {
   updateHeroPosition();
 }
 
-// Позициониране на героя – центриран (без offset)
+// Позициониране на героя – центриран
 function updateHeroPosition() {
   const mazeActive = document.getElementById('maze-active');
   const hero = document.getElementById('hero');
@@ -1055,8 +1055,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Логин
   const loginModal = document.getElementById('login-modal');
-  // Добави този код след като DOM е зареден (например в DOMContentLoaded събитието)
-    document.getElementById('username').addEventListener('keydown', function( e ) {
+  document.getElementById('username').addEventListener('keydown', function( e ) {
   if (e.key === 'Enter') {
     document.getElementById('login-btn').click();
   }
