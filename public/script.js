@@ -553,7 +553,7 @@ function loadPassage(textId) {
     .catch(err => console.error("Грешка при зареждането на текста:", err));
 }
 
-// Слушател за бутона за затваряне – добавете веднъж при DOMContentLoaded
+// Бутона за затваряне
 document.addEventListener('DOMContentLoaded', () => {
   const closeBtn = document.getElementById('close-passage-btn');
   if (closeBtn) {
