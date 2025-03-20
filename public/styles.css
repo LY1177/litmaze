@@ -361,6 +361,9 @@
   .droppable-zone {
     font-size: 14px;
   }
+  #passage-container {
+       overflow-y: auto;
+  }
 }
 @media (min-width: 769px) and (max-width: 1024px) {
   .card-container {
@@ -371,6 +374,9 @@
     aspect-ratio: 1 / 1;
     max-width: 800px;
   }
+  #passage-container {
+    overflow-y: auto;
+}
 }
 
    @media (max-width: 768px) {
@@ -443,6 +449,10 @@
     .droppable-zone {
       font-size: 12px;
     }
+    #passage-container {
+      overflow-y: auto;
+  }
+
   }
   
   .draggable-item {
