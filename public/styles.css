@@ -239,7 +239,7 @@
     position: relative;
   }
   .cell.path {
-    background: #cdc5ac;
+    background: #dee2d2;
     /* opacity: 0.95; */
   }
   .cell.entrance {
@@ -548,5 +548,68 @@
   overflow: visible;
   font-size: 12px;
   font-family: Arial, sans-serif !important;
+}
+#fun-fact-modal .modal-content {
+  background: #fffae6; 
+  border-radius: 10px;
+  padding: 20px;
+  font-size: 16px;
+  color: #333;
+}
+
+#fun-fact-modal h3 {
+  margin-top: 0;
+}
+
+#fun-fact-modal p {
+  margin-bottom: 10px;
+}
+.cell.treasure {
+  background: url("images/treasure.png") no-repeat center center;
+  background-size: cover;
+}
+#maze-container-active img {
+  display: none; /* винаги е скрито първоначално */
+  position: absolute; /* да можеш да го местиш */
+  top: 0; 
+  left: 0; 
+  width: 50%;
+  height: 50%;
+  object-fit: contain;
+  /* z-index: 5; над лабиринта, но под героя */
+}
+
+#treasure-img {
+  display: none ; /* задължително скрито първоначално */
+  position: absolute; /* позициониране, където искаш в лабиринта */
+  /* bottom: -110px; примерна позиция под лабиринта */
+  /* left: 50px; */
+    width: 20px;
+  height: 20px;
+  z-index: 1000;
+}
+.cell.treasure {
+  background: #cdc5ac url("images/wall.png") no-repeat center center; 
+  background-size: cover;
+  position: relative;
+}
+
+.btn, .nav-btn {
+  border-radius: 25px;
+  background-color: #42A5F5; /* синьо */
+  color: white;
+  transition: transform 0.2s;
+}
+
+.btn:hover, .nav-btn:hover {
+  transform: scale(1.05);
+}
+#game-container {
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
