@@ -8,7 +8,11 @@
     height: 100%;
     font-family: 'Baloo 2', cursive, sans-serif;
     /* Фоновото изображение */
-    background: url("images/game1.jpg") repeat center center;
+    background: url("images/game1.jpg");
+    background-size: cover; /* покрива екрана без разтягане */
+    background-position: center; /* центриране */
+    background-attachment: fixed; 
+    background-repeat: no-repeat;
   }
   
   /* Главен контейнер, за да не е fullscreen */
