@@ -244,16 +244,16 @@
   }
   .cell.path {
     background: #dee2d2;
-    /* opacity: 0.95; */
   }
   .cell.entrance {
-    /* background: #a0ffa0; */
-    background: #f4f4f3;
+    /* background: #f4f4f3; */
+    background: #dee2d2;
     opacity: 0.95;
   }
   .cell.exit {
     /* background: #ffa0a0; */
-    background: #f4f4f3;
+    /* background: #f4f4f3; */
+    background: #dee2d2;
     opacity: 0.95;
   }
   .cell.player {
