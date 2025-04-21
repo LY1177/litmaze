@@ -19,10 +19,26 @@
       <div class="modal-content">
         <h2>Литературен лабиринт</h2>
         <input type="text" id="username" placeholder="Потребителско име">
+        <input type="password" id="password" placeholder="Парола">
         <button id="login-btn" class="btn">Влез</button>
+        <button id="open-register-from-login" class="btn">Регистрация</button>
       </div>
     </div>
-    
+    <!-- Регистрационен модал -->
+    <div id="register-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Регистрация</h2>
+        <input type="text"    id="register-username" placeholder="Потребителско име">
+        <input type="email"   id="register-email"    placeholder="Имейл">
+        <input type="password" id="register-password" placeholder="Парола">
+        <div class="modal-buttons">
+          <button id="register-btn"        class="btn">Регистрация</button>
+          <button id="close-register-btn"  class="btn">Затвори</button>
+        </div>
+      </div>
+    </div>
+
+
     <!-- 2) Екран за лабиринта (скрит по начало) -->
     <div id="game-container" class="screen hidden">
        
@@ -55,9 +71,10 @@
     <div id="author-selection" class="screen">
       <h2>Литературен лабиринт</h2>
       <div class="rules-btn-container">
-        <button id="rules-btn" class="btn">Правила на играта</button>
-        <button id="nvo-btn" class="btn">НВО</button>
-      </div>
+  <button id="rules-btn" class="btn">Правила на играта</button>
+  <button id="nvo-btn" class="btn">НВО</button>
+ </div>
+
       
       <!-- Мрежа с 12 карти -->
       <div class="card-container">
@@ -317,6 +334,14 @@
 
   </div><!-- #main-container -->
   
+<div id="fun-fact-modal" class="modal hidden">
+  <div class="modal-content">
+    <h2>💡Любопитен факт</h2>
+    <div id="fun-fact-content"></div>
+    <button id="close-fun-fact-btn" class="btn">Затвори</button>
+  </div>
+</div>
+
   
 </body>
 </html>
