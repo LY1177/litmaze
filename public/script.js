@@ -10,7 +10,46 @@ let playerPos = { row: 0, col: 0 };
 let currentAuthor = null;
 let gameQuestions = [];
 let musicPaused = false;
+const mazeBackgrounds = {
+  vazov:    'images/mazes/vazov.png',
+  aleko:    'images/mazes/aleko.png',
+  pelin:    'images/mazes/pelin.png',
+  yordan:   'images/mazes/yordan.png',
+  peyo:     'images/mazes/peyo.png',
+  petko:    'images/mazes/petko.png',
+  hristo:   'images/mazes/hristo.png',
+  dobri:    'images/mazes/dobri.png',
+  veselin:  'images/mazes/veselin.png',
+  lyuben:   'images/mazes/lyuben.png',
+  smirnenski:'images/mazes/smirnenski.png',
+  obobshtenie:'images/mazes/obobshtenie.png',
+  nvo2022: 'images/mazes/nvo2022.png',
+  nvo2023: 'images/mazes/nvo2023.png',
+  nvo2024: 'images/mazes/nvo2024.png'
+
+
+  // … и за NVO ако може би
+};
+
 const MAX_LEVEL = 5;
+const funFacts = {
+  vazov: [
+    "Иван Вазов е наричан 'патриарх на българската литература'.",
+    "Романът 'Под игото' първоначално е публикуван в списание, преди да стане книга.",
+    "Вазов е автор на първото българско стихотворение в следосвобожденска България."
+  ],
+  aleko: [
+    "Алеко Константинов е известен като пътешественик и е бил запален турист.",
+    "Псевдонимът на Алеко е 'Щастливеца', иронично избран заради многото му лични несполуки.",
+    "Алеко Константинов загива трагично при покушение, насочено не към него, а към негов спътник."
+  ],
+  nvo2022: [
+    "Кольо Фичето строи Беленския мост над Янтра, който съществува и до днес.",
+    "Според легендата, Кольо Фичето е спасил катедралата 'Света Богородица' в Париж.",
+    "Кольо Фичето бил самоук строител, но признат за един от най-добрите архитекти на своето време."
+  ],
+  
+};
 
 // Лабиринти за 12 автора (3 нива)
 const labyrinths = {
@@ -63,7 +102,7 @@ const labyrinths = {
           [1, 0, 0, 0, 1],
           [0, 1, 1, 0, 1],
           [0, 0, 0, 0, 1],
-          [1, 1, 1, 1, 4]
+          [1, 1, 1, 0, 4]
         ]
       ],
       3: [
@@ -298,7 +337,7 @@ const labyrinths = {
           [1, 0, 1, 0, 1, 0],
           [1, 0, 0, 0, 1, 0],
           [1, 1, 1, 1, 1, 0],
-          [3, 1, 1, 1, 1, 0]
+          [1, 1, 1, 1, 1, 0]
         ]
       ]
     }
@@ -486,12 +525,70 @@ const authorDisplayName = {
   "nvo2024": "НВО 2024"
 };
 
+/**
+ * Зарежда passage от сървъра и го показва в модала.
+ * @param {number|string} textId — id-то на текста в базата.
+ */
+function setMazeBackground(authorKey) {
+  const container = document.getElementById('maze-container-active');
+  const img = mazeBackgrounds[authorKey] || 'images/mazes/default.png';
+  container.style.backgroundImage = `url('${img}')`;
+  container.style.backgroundSize = 'cover';
+  container.style.backgroundPosition = 'center';
+  container.style.setProperty('--wall-image', `url('${img}')`);
+}
+function loadPassage(textId) {
+  console.log("Зареждам текст с id:", textId);
+  fetch(`/api/texts?id=${encodeURIComponent(textId)}`, {
+    credentials: 'include'
+  })
+    .then(res => {
+      if (!res.ok) throw new Error(`Грешка при зареждане: ${res.status}`);
+      return res.json();
+    })
+    .then(data => {
+      const passageContainer = document.getElementById('passage-container');
+      passageContainer.textContent = data.content;
+      const passageModal = document.getElementById('passage-modal');
+      passageModal.classList.remove('hidden');
+      passageModal.classList.add('visible');
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Неуспешно зареждане на текста.");
+    });
+}
+
+
+// Функция за извличане на въпроси (API)
+// function getQuestionsForAuthor(authorName, callback) {
+//   // fetch(`http://localhost:3000/api/questions?author=${encodeURIComponent(authorName)}`)
+     
+//    fetch("https://litmaze.onrender.com/api/questions?author=" + encodeURIComponent(authorName))
+//     .then(r => r.json())
+//     .then(data => callback(data))
+//     .catch(err => console.error("Грешка при извличане на въпроси:", err));
+// }
+// function getQuestionsForAuthor(authorName, callback) {
+//   fetch(`/api/questions?author=${encodeURIComponent(authorName)}`, {
+//     credentials: 'include'
+//   })
+//     .then(res => {
+//       if (!res.ok) throw new Error(`Неуспешно зареждане на въпроси: ${res.status}`);
+//       return res.json();
+//     })
+//     .then(data => callback(data))
+//     .catch(err => console.error("Грешка при извличане на въпроси:", err));
+// }
 // Функция за извличане на въпроси (API)
 function getQuestionsForAuthor(authorName, callback) {
-  // fetch(`http://localhost:3000/api/questions?author=${encodeURIComponent(authorName)}`)
-     
-   fetch("https://litmaze.onrender.com/api/questions?author=" + encodeURIComponent(authorName))
-    .then(r => r.json())
+  fetch(`/api/questions?author=${encodeURIComponent(authorName)}`, {
+    credentials: 'include'
+  })
+    .then(res => {
+      if (!res.ok) throw new Error(`Неуспешно зареждане на въпроси: ${res.status}`);
+      return res.json();
+    })
     .then(data => callback(data))
     .catch(err => console.error("Грешка при извличане на въпроси:", err));
 }
@@ -499,6 +596,7 @@ function getQuestionsForAuthor(authorName, callback) {
 // Инициализация на лабиринта
 function initMazeFromAuthor() {
   if (!currentAuthor) return;
+  setMazeBackground(currentAuthor);
   const labyrinthData = labyrinths[currentAuthor];
   if (!labyrinthData) {
     console.error("Няма лабиринт за този автор:", currentAuthor);
@@ -511,6 +609,8 @@ function initMazeFromAuthor() {
 
 // Зареждане на ниво
 function loadMazeLevel(authorKey, level) {
+  // задаваме фоновото изображение за този автор
+   setMazeBackground(authorKey);
   const levelMazes = labyrinths[authorKey].levels[level];
   if (!levelMazes) {
     alert("Няма лабиринт за това ниво.");
@@ -533,28 +633,90 @@ function loadMazeLevel(authorKey, level) {
     renderMaze();
   });
 }
-// За дългия текст
-function loadPassage(textId) {
-  console.log("Зареждам текст с id:", textId);
-  fetch(`/api/texts?id=${encodeURIComponent(textId)}`)
-    .then(response => response.json())
-    .then(data => {
-      console.log("Получих текст:", data.content);
-      const passageContainer = document.getElementById('passage-container');
-      if (passageContainer) {
-        passageContainer.textContent = data.content;
-      }
-      const passageModal = document.getElementById('passage-modal');
-      if (passageModal) {
-        passageModal.classList.remove('hidden');
-        passageModal.classList.add('visible');
-      }
-    })
-    .catch(err => console.error("Грешка при зареждането на текста:", err));
-}
+
+
 
 // Бутона за затваряне
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('register‑link =', document.getElementById('open-register-from-login'));
+
+  // Отваряне/затваряне на регистрационния модал
+document.getElementById('open-register-from-login').addEventListener('click', () => {
+  document.getElementById('register-modal').classList.remove('hidden');
+});
+document.getElementById('close-register-btn').addEventListener('click', () => {
+  document.getElementById('register-modal').classList.add('hidden');
+});
+
+// Изпращане на регистрация
+document.getElementById('register-btn').addEventListener('click', () => {
+  const username = document.getElementById('register-username').value.trim();
+  const email    = document.getElementById('register-email').value.trim();
+  const password = document.getElementById('register-password').value.trim();
+
+  if (!username || !email || !password) {
+    alert("Моля, попълнете всички полета.");
+    return;
+  }
+// Отваряне на модалите
+document.getElementById('open-login').addEventListener('click', () => {
+  document.getElementById('login-modal').classList.remove('hidden');
+});
+document.getElementById('open-register-from-login').addEventListener('click', () => {
+  document.getElementById('register-modal').classList.remove('hidden');
+});
+
+// Затваряне на регистрационния модал
+document.getElementById('close-register-btn').addEventListener('click', () => {
+  document.getElementById('register-modal').classList.add('hidden');
+});
+
+// Обработка на регистрация
+document.getElementById('register-btn').addEventListener('click', () => {
+  const username = document.getElementById('register-username').value.trim();
+  const email    = document.getElementById('register-email').value.trim();
+  const password = document.getElementById('register-password').value.trim();
+
+  if (!username || !email || !password) {
+    alert("Моля, попълнете всички полета.");
+    return;
+  }
+
+  fetch('/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, email, password })
+  })
+    .then(res => {
+      if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
+      return res.text();
+    })
+    .then(msg => {
+      alert(msg);  // напр. "Регистрацията е успешна!"
+      document.getElementById('register-modal').classList.add('hidden');
+    })
+    .catch(err => {
+      alert(err.message);
+    });
+});
+
+  fetch('/register', {
+    method: 'POST',
+    headers:   { 'Content-Type': 'application/json' },
+    credentials:'include',
+    body: JSON.stringify({ username, email, password })
+  })
+    .then(res => {
+      if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
+      return res.text();
+    })
+    .then(msg => {
+      alert(msg); // "Регистрацията е успешна!"
+      document.getElementById('register-modal').classList.add('hidden');
+    })
+    .catch(err => alert(err.message));
+});
+
   const closeBtn = document.getElementById('close-passage-btn');
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
@@ -565,6 +727,55 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+  // Отваря регистрационния модал от логин-модала
+document.getElementById('open-register-from-login')
+.addEventListener('click', () => {
+  document.getElementById('login-modal').classList.add('hidden');
+  document.getElementById('register-modal').classList.remove('hidden');
+});
+// Покажи регистрационния модал от логин‑модала
+document.getElementById('open-register-from-login')
+  .addEventListener('click', () => {
+    document.getElementById('login-modal').classList.add('hidden');
+    document.getElementById('register-modal').classList.remove('hidden');
+  });
+
+// Затвори регистрационния модал (Отказ)
+document.getElementById('close-register-btn')
+  .addEventListener('click', () => {
+    document.getElementById('register-modal').classList.add('hidden');
+    document.getElementById('login-modal').classList.remove('hidden');
+  });
+
+// Клик върху Регистрация в самия модал
+document.getElementById('register-btn')
+  .addEventListener('click', () => {
+    const username = document.getElementById('register-username').value.trim();
+    const email    = document.getElementById('register-email').value.trim();
+    const password = document.getElementById('register-password').value;
+
+    if (!username || !email || !password) {
+      return alert("Попълнете всички полета.");
+    }
+
+    fetch('/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password }),
+    })
+    .then(res => {
+      if (!res.ok) return res.text().then(t => { throw new Error(t) });
+      return res.text();
+    })
+    .then(msg => {
+      alert(msg); // напр. "Регистрацията е успешна!"
+      // скрий регистрация, покажи логин
+      document.getElementById('register-modal').classList.add('hidden');
+      document.getElementById('login-modal').classList.remove('hidden');
+    })
+    .catch(err => alert(err.message));
+  });
+
 });
 
 
@@ -597,23 +808,34 @@ function renderMaze() {
       cell.classList.add('cell');
       cell.dataset.row = r;
       cell.dataset.col = c;
-      
+      if (currentMaze[r][c] === 1) {
+        cell.classList.add('wall');
+      }
       if (revealedMaze[r][c] === 0) {
         cell.classList.add('path');
       }
       if (currentMaze[r][c] === 3) {
         cell.classList.add('entrance');
+        const enterLabel = document.createElement('div');
+        enterLabel.classList.add('cell-label');
+        enterLabel.textContent = 'Начало';
+        cell.appendChild(enterLabel);
+       
+      }
+      if (currentMaze[r][c] === 4) {
+        cell.classList.add('exit');
+        const exitLabel = document.createElement('div');
+        exitLabel.classList.add('cell-label');
+        exitLabel.textContent = 'Изход';
+        cell.appendChild(exitLabel);
+      }
+      if (r === playerPos.row && c === playerPos.col) {
+        cell.classList.add('player');
         const hint = getNextStepDirection(currentMaze, playerPos);
         if (hint) {
           cell.dataset.hint = hint.name;
           cell.classList.add('hint');
         }
-      }
-      if (currentMaze[r][c] === 4) {
-        cell.classList.add('exit');
-      }
-      if (r === playerPos.row && c === playerPos.col) {
-        cell.classList.add('player');
       }
       
       cell.addEventListener('click', () => handleCellClick(r, c));
@@ -699,6 +921,23 @@ function updateScore(points) {
 }
 
 // Показване на въпрос
+function showRandomFact() {
+  if (!currentAuthor || !funFacts[currentAuthor] || funFacts[currentAuthor].length === 0) {
+    console.warn("Няма дефинирани факти за автора:", currentAuthor);
+    return;
+  }
+
+  const facts = funFacts[currentAuthor];
+  const randomFact = facts[Math.floor(Math.random() * facts.length)];
+
+  const factContent = document.getElementById('fun-fact-content');
+  const factModal = document.getElementById('fun-fact-modal');
+
+  if (factContent && factContent) {
+    factContent.textContent = randomFact;
+    factContent.parentElement.parentElement.classList.remove('hidden');
+  }
+}
 
 function showQuestion(onCorrect) {
   // Ако няма повече въпроси, извикваме callback-а
@@ -725,26 +964,23 @@ function showQuestion(onCorrect) {
   // Ако въпросът има свързан текст (и е за НВО)
   
   if (currentAuthor && currentAuthor.startsWith("nvo") && q.textId) {
-    console.log("currentAuthor:", currentAuthor);
     const textBtn = document.createElement('button');
     textBtn.textContent = "Покажи текст";
     textBtn.classList.add('btn');
     textBtn.addEventListener('click', () => {
-      loadPassage(q.textId);
-      // Ако контейнерът за текста е скрит, го правим видим
-      const passageContainer = document.getElementById('passage-container');
-      if (passageContainer) {
-        passageContainer.style.display = 'block';
-      }
+      loadPassage(q.textId);     // <<< правилно
     });
     answersDiv.appendChild(textBtn);
     answersDiv.appendChild(document.createElement('br'));
   }
   
+  
+  
   // За въпроси от тип multiple_choice – използваме <span> за опции
   if (q.type === 'multiple_choice') {
     (q.options || []).forEach(opt => {
       const btn = document.createElement('button');
+      btn.classList.add('answer-option'); // <-- добави този ред
       btn.textContent = `${opt.label}) ${opt.option_text}`;
       btn.addEventListener('click', () => {
         if (opt.is_correct) {
@@ -753,6 +989,9 @@ function showQuestion(onCorrect) {
           gameQuestions.splice(randomIndex, 1);
           closeQuestionModal();
           onCorrect();
+          if (Math.random() < 0.2) {
+            showRandomFact();
+          }
         } else {
           wrongSound.play().catch(err => console.error("Error playing wrong sound:", err));
           alert("Грешен отговор! Опитайте отново.");
@@ -761,12 +1000,11 @@ function showQuestion(onCorrect) {
       answersDiv.appendChild(btn);
       answersDiv.appendChild(document.createElement('br'));
     });
-  }
-  // За въпроси от тип true_false – използваме <span> и добавяме префикс
-  else if (q.type === 'true_false') {
-    (q.options || []).forEach(opt => {
+  } else if (q.type === 'true_false') {
+    (q.options || []).forEach((opt, index) => {
       const btn = document.createElement('button');
-      btn.textContent = opt.option_text;
+      btn.classList.add('answer-option'); // <-- добави този ред
+      btn.textContent = (index === 0 ? "А) " : "Б) ") + opt.option_text; // добавя префикс
       btn.addEventListener('click', () => {
         if (opt.is_correct) {
           correctSound.play().catch(err => console.error("Error playing correct sound:", err));
@@ -774,6 +1012,9 @@ function showQuestion(onCorrect) {
           gameQuestions.splice(randomIndex, 1);
           closeQuestionModal();
           onCorrect();
+          if (Math.random() < 0.2) {
+            showRandomFact();
+          }
         } else {
           wrongSound.play().catch(err => console.error("Error playing wrong sound:", err));
           alert("Грешен отговор! Опитайте отново.");
@@ -783,6 +1024,7 @@ function showQuestion(onCorrect) {
       answersDiv.appendChild(document.createElement('br'));
     });
   }
+  
   // За въпроси от тип matching – извикваме съответната функция
   else if (q.type === 'matching') {
     renderMatchingDragDrop(q, answersDiv, () => {
@@ -796,6 +1038,13 @@ function showQuestion(onCorrect) {
 function closeQuestionModal() {
   document.getElementById('question-modal').classList.add('hidden');
 }
+document.addEventListener('DOMContentLoaded', () => {
+  const closeFactBtn = document.getElementById('close-fun-fact-btn');
+  closeFactBtn.addEventListener('click', () => {
+    document.getElementById('fun-fact-content').textContent = "";
+    document.getElementById('fun-fact-modal').classList.add('hidden');
+  });
+});
 
 
 // Drag & drop (matching)
@@ -881,6 +1130,14 @@ function renderMatchingDragDrop(q, container, onCorrect) {
   });
   //  wrapper.appendChild(checkBtn);
   container.appendChild(checkBtn); 
+  document
+    .getElementById('register-btn')
+    .addEventListener('click', () => {
+      const u = document.getElementById('register-username').value;
+      const e = document.getElementById('register-email').value;
+      const p = document.getElementById('register-password').value;
+      // TODO: validate & POST to /register…
+    });
 }
 
 
@@ -1052,43 +1309,114 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-  
-  // Логин
-  const loginModal = document.getElementById('login-modal');
-  document.getElementById('username').addEventListener('keydown', function( e ) {
-  if (e.key === 'Enter') {
-    document.getElementById('login-btn').click();
+  // public/script.js
+
+// Това трябва да е **извън** всички функции, в най-горната част
+const loginModal = document.getElementById('login-modal');
+const usernameInput = document.getElementById('username');
+const passwordInput = document.getElementById('password');
+const loginBtn     = document.getElementById('login-btn');
+
+// Enter-клавишът да клика бутона
+usernameInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') loginBtn.click();
+});
+passwordInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') loginBtn.click();
+});
+
+// Сега click‑handler‑ът вече вижда loginModal!
+loginBtn.addEventListener('click', () => {
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value.trim();
+
+  if (!username || !password) {
+    alert("Моля, въведете потребителско име и парола.");
+    return;
   }
-  });
-   document.getElementById('login-btn').addEventListener('click', () => {
-    const username = document.getElementById('username').value.trim();
-    
-    if (!username) {
-      alert("Моля, въведете потребителско име.");
-      return;
-    }
-    currentUser = username;
-    document.getElementById('display-username').textContent = currentUser;
-    loginModal.classList.remove('visible');
-    loginModal.classList.add('hidden');
-  });
+
+  fetch('/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ username, password })
+  })
+    .then(res => {
+      if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
+      return res.text();
+    })
+    .then(msg => {
+      // Успешен вход – скриваме модала
+      loginModal.classList.remove('visible');
+      loginModal.classList.add('hidden');
+      document.getElementById('display-username').textContent = username;
+      alert(msg);
+    })
+    .catch(err => alert(err.message));
+});
+
+  // Логин
+  // document.getElementById('login-btn').addEventListener('click', () => {
+  //   const username = document.getElementById('username').value.trim();
+  //   const password = document.getElementById('password').value.trim();
   
-  // Бутони "Вход" на картите
-  document.querySelectorAll('.enter-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const card = e.target.closest('.card');
-      const author = card.dataset.author;
-      selectAuthor(author);
-    });
-  });
+  //   if (!username || !password) {
+  //     alert("Моля, въведете потребителско име и парола.");
+  //     return;
+  //   }
   
-  // Флипване на картите при клик
+  //   fetch('/login', {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     credentials: 'include',                         // за да се пусне session cookie
+  //     body: JSON.stringify({ username, password })
+  //   })
+  //     .then(res => {
+  //       if (!res.ok) {
+  //         return res.text().then(txt => { throw new Error(txt) });
+  //       }
+  //       return res.text();
+  //     })
+  //     .then(msg => {
+  //       // успешен вход
+  //       currentUser = username;
+  //       document.getElementById('display-username').textContent = currentUser;
+  //       loginModal.classList.remove('visible');
+  //       loginModal.classList.add('hidden');
+  //       alert(msg);  // напр. "Входът е успешен!"
+  //     })
+  //     .catch(err => {
+  //       alert(err.message);  // напр. "Невалидна парола."
+  //     });
+  // });
+  
+  
+  // // Бутони "Вход" на картите
+  // document.querySelectorAll('.enter-btn').forEach(btn => {
+  //   btn.addEventListener('click', (e) => {
+  //     e.stopPropagation();
+  //     const card = e.target.closest('.card');
+  //     const author = card.dataset.author;
+  //     selectAuthor(author);
+  //   });
+  // });
+  
+  // // Флипване на картите при клик
   document.querySelectorAll('.card').forEach(card => {
     card.addEventListener('click', () => {
       card.querySelector('.card-inner').classList.toggle('flipped');
     });
   });
+  // 2) “Вход” buttons on the backs of the cards
+  document.querySelectorAll('.enter-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();   
+      const author = btn.closest('.card').dataset.author;
+      selectAuthor(author);
+    });
+  });
+
+
   
   // Бутон "Назад към авторите"
   document.getElementById('back-to-authors').addEventListener('click', () => {
@@ -1152,10 +1480,21 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Функция за избор на автор
  // Глобална променлива, която следи състоянието на музиката (false = пуска се, true = е спряла)
-let musicPaused = false;
+ function setMazeBackground(authorKey) {
+  const container = document.getElementById('maze-container-active');
+  const img = mazeBackgrounds[authorKey] || 'images/mazes/default.png';
+  container.style.backgroundImage = `url('${img}')`;
+  container.style.backgroundSize = 'cover';
+  container.style.backgroundPosition = 'center';
+  container.style.setProperty('--wall-image', `url('${img}')`);
+}
+
+ let musicPaused = false;
+
 
 function selectAuthor(author) {
   currentAuthor = author;
+  setMazeBackground(author);
   // Пусни музиката само ако не е паузирана
   if (!musicPaused) {
     backgroundMusic.play();
@@ -1164,11 +1503,19 @@ function selectAuthor(author) {
   // Скриваме екран с картите, показваме лабиринта
   document.getElementById('author-selection').classList.add('hidden');
   document.getElementById('game-container').classList.remove('hidden');
-  
-  // Сменяме заглавието
   document.getElementById('labyrinth-title').textContent =
-    "Лабиринт: " + (authorDisplayName[currentAuthor] || currentAuthor);
-  
+    "Лабиринт: " + (authorDisplayName[author] || author);
+  // задаваме фонова картинка
+// const mazeContainer = document.getElementById('maze-container-active');
+// const bg = mazeBackgrounds[author] || 'images/maze_default.jpg';
+// Слагаме фон-изображение в контейнера
+// const mazeGrid = document.getElementById('maze-active');
+//   mazeGrid.style.backgroundImage = `url("images/mazes/${author}.png")`;
+//   mazeGrid.style.backgroundSize = 'cover';
+//   mazeGrid.style.backgroundPosition = 'center';
+// mazeContainer.style.backgroundSize = 'cover';
+// mazeContainer.style.backgroundPosition = 'center';
+
   initMazeFromAuthor();
 }
 
