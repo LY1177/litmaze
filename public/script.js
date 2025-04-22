@@ -682,28 +682,9 @@ document.getElementById('register-btn').addEventListener('click', () => {
     return;
   }
 
-  fetch('/api/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, email, password })
-  })
-    .then(res => {
-      if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
-      return res.text();
-    })
-    .then(msg => {
-      alert(msg);  // напр. "Регистрацията е успешна!"
-      document.getElementById('register-modal').classList.add('hidden');
-    })
-    .catch(err => {
-      alert(err.message);
-    });
-});
-
-  // fetch('/register', {
+  // fetch('/api/register', {
   //   method: 'POST',
-  //   headers:   { 'Content-Type': 'application/json' },
-  //   credentials:'include',
+  //   headers: { 'Content-Type': 'application/json' },
   //   body: JSON.stringify({ username, email, password })
   // })
   //   .then(res => {
@@ -711,10 +692,29 @@ document.getElementById('register-btn').addEventListener('click', () => {
   //     return res.text();
   //   })
   //   .then(msg => {
-  //     alert(msg); // "Регистрацията е успешна!"
+  //     alert(msg);  // напр. "Регистрацията е успешна!"
   //     document.getElementById('register-modal').classList.add('hidden');
   //   })
-  //   .catch(err => alert(err.message));
+  //   .catch(err => {
+  //     alert(err.message);
+  //   });
+});
+
+  fetch('/api/register', {
+    method: 'POST',
+    headers:   { 'Content-Type': 'application/json' },
+    credentials:'include',
+    body: JSON.stringify({ username, email, password })
+  })
+    .then(res => {
+      if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
+      return res.text();
+    })
+    .then(msg => {
+      alert(msg); // "Регистрацията е успешна!"
+      document.getElementById('register-modal').classList.add('hidden');
+    })
+    .catch(err => alert(err.message));
 });
 
   const closeBtn = document.getElementById('close-passage-btn');
@@ -1335,7 +1335,7 @@ loginBtn.addEventListener('click', () => {
     return;
   }
 
-  fetch('/login', {
+  fetch('api/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
