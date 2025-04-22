@@ -1,12 +1,25 @@
 // server.js
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
-const session = require('express-session');
+// const session = require('express-session');
 const bodyParser = require('body-parser');
 const path = require('path');
 
 const app = express();
 const port = 3000;
+const session = require('express-session');
+
+// right after your imports, before any routes:
+const sess = {
+  secret: process.env.SESSION_SECRET || 'fallback-secret', // ← ADD THIS
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    // secure: true, // only if you serve over HTTPS
+    maxAge: 1000 * 60 * 60 * 24, // 1 day, for example
+  },
+};
+app.use(session(sess));
 
 // Отваряне на SQLite базата данни (mydb.db)
 const db = new sqlite3.Database(path.join(__dirname, 'mydb.db'), (err) => {
