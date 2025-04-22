@@ -569,18 +569,6 @@ function getQuestionsForAuthor(authorName, callback) {
     .then(data => callback(data))
     .catch(err => console.error("Грешка при извличане на въпроси:", err));
 }
-// function getQuestionsForAuthor(authorName, callback) {
-//   fetch(`/api/questions?author=${encodeURIComponent(authorName)}`, {
-//     credentials: 'include'
-//   })
-//     .then(res => {
-//       if (!res.ok) throw new Error(`Неуспешно зареждане на въпроси: ${res.status}`);
-//       return res.json();
-//     })
-//     .then(data => callback(data))
-//     .catch(err => console.error("Грешка при извличане на въпроси:", err));
-// }
-// Функция за извличане на въпроси (API)
 function getQuestionsForAuthor(authorName, callback) {
   fetch(`/api/questions?author=${encodeURIComponent(authorName)}`, {
     credentials: 'include'
@@ -592,6 +580,18 @@ function getQuestionsForAuthor(authorName, callback) {
     .then(data => callback(data))
     .catch(err => console.error("Грешка при извличане на въпроси:", err));
 }
+// Функция за извличане на въпроси (API)
+// function getQuestionsForAuthor(authorName, callback) {
+//   fetch(`/api/questions?author=${encodeURIComponent(authorName)}`, {
+//     credentials: 'include'
+//   })
+//     .then(res => {
+//       if (!res.ok) throw new Error(`Неуспешно зареждане на въпроси: ${res.status}`);
+//       return res.json();
+//     })
+//     .then(data => callback(data))
+//     .catch(err => console.error("Грешка при извличане на въпроси:", err));
+// }
 
 // Инициализация на лабиринта
 function initMazeFromAuthor() {
