@@ -561,14 +561,14 @@ function loadPassage(textId) {
 
 
 // Функция за извличане на въпроси (API)
-// function getQuestionsForAuthor(authorName, callback) {
-//   // fetch(`http://localhost:3000/api/questions?author=${encodeURIComponent(authorName)}`)
+function getQuestionsForAuthor(authorName, callback) {
+  // fetch(`http://localhost:3000/api/questions?author=${encodeURIComponent(authorName)}`)
      
-//    fetch("https://litmaze.onrender.com/api/questions?author=" + encodeURIComponent(authorName))
-//     .then(r => r.json())
-//     .then(data => callback(data))
-//     .catch(err => console.error("Грешка при извличане на въпроси:", err));
-// }
+   fetch("https://litmaze.onrender.com/api/questions?author=" + encodeURIComponent(authorName))
+    .then(r => r.json())
+    .then(data => callback(data))
+    .catch(err => console.error("Грешка при извличане на въпроси:", err));
+}
 // function getQuestionsForAuthor(authorName, callback) {
 //   fetch(`/api/questions?author=${encodeURIComponent(authorName)}`, {
 //     credentials: 'include'
