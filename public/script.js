@@ -682,7 +682,7 @@ document.getElementById('register-btn').addEventListener('click', () => {
     return;
   }
 
-  // fetch('/api/register', {
+  // fetch(`/api/register`, {
   //   method: 'POST',
   //   headers: { 'Content-Type': 'application/json' },
   //   body: JSON.stringify({ username, email, password })
@@ -700,7 +700,7 @@ document.getElementById('register-btn').addEventListener('click', () => {
   //   });
 });
 
-  fetch('/api/register', {
+  fetch(`/api/register`, {
     method: 'POST',
     headers:   { 'Content-Type': 'application/json' },
     credentials:'include',
@@ -1335,7 +1335,7 @@ loginBtn.addEventListener('click', () => {
     return;
   }
 
-  fetch('api/login', {
+  fetch(`api/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',
