@@ -191,44 +191,37 @@ app.post('/register', (req, res) => {
 /* ---------------------- API Endpoint за вход ---------------------- */
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
-
+  
   if (!username || !password) {
     return res.status(400).send("Моля, попълнете всички полета.");
   }
-
+  
+  // Търсим потребителя в базата данни
   db.get("SELECT * FROM users WHERE username = ?", [username], (err, user) => {
     if (err) {
       console.error("Грешка при проверка на потребителските данни:", err.message);
-      return res.status(500).send("Възникна грешка при проверка.");
+      return res.status(500).send("Възникна грешка при проверка на потребителските данни.");
     }
-
+    
     if (!user) {
       return res.status(400).send("Потребителското име не съществува.");
     }
-
-    bcrypt.compare(password, user.password, (err, result) => {
-      console.log("Вход парола:", password);  // Лог на въведената парола
-      console.log("Хеширана парола:", user.password); // Лог на хешираната парола
-      if (err) {
-        console.error("Грешка при сравнение на пароли:", err.message);
-        return res.status(500).send("Грешка при проверка на паролата.");
-      }
     
-      if (!result) {
-        return res.status(400).send("Невалидна парола.");
-      }
+    // Проверка на паролата (plain text)
+    if (password !== user.password) {
+      return res.status(400).send("Невалидна парола.");
+    }
     
-      req.session.user = {
-        id: user.id,
-        username: user.username,
-        email: user.email
-      };
+    // Ако данните са верни, създаваме сесия
+    req.session.user = {
+      id: user.id,
+      username: user.username,
+      email: user.email
+    };
     
-      return res.status(200).send("Входът е успешен!");
-    });
+    res.status(200).send("Входът е успешен!");
   });
 });
-
 
 // Сервиране на статични файлове от папката public (HTML, CSS, JS, аудио, изображения и т.н.)
 app.use(express.static('public'));

@@ -224,6 +224,10 @@ app.post('/login', (req, res) => {
         email: user.email
       };
     
+      res.status(200).send("Входът е успешен!");
+    });
+    
+
       return res.status(200).send("Входът е успешен!");
     });
   });

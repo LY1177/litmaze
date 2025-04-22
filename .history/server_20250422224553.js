@@ -172,20 +172,20 @@ app.post('/register', (req, res) => {
   //   });
   // });
   bcrypt.hash(password, saltRounds, (err, hash) => {
-  if (err) {
-    console.error("Грешка при хеширане:", err.message);
-    return res.status(500).send("Грешка при криптиране на паролата.");
-  }
-
-  db.run("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", [username, email, hash], function(err) {
     if (err) {
-      console.error("Грешка при регистрирането:", err.message);
-      return res.status(500).send("Възникна грешка при регистрирането.");
+      console.error("Грешка при хеширане:", err.message);
+      return res.status(500).send("Грешка при криптиране на паролата.");
     }
-    res.status(200).send("Регистрацията е успешна!");
+  
+    db.run("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", [username, email, hash], function(err) {
+      if (err) {
+        console.error("Грешка при регистрирането:", err.message);
+        return res.status(500).send("Възникна грешка при регистрирането.");
+      }
+      res.status(200).send("Регистрацията е успешна!");
+    });
   });
-});
-
+  
 });
 
 /* ---------------------- API Endpoint за вход ---------------------- */
@@ -207,28 +207,26 @@ app.post('/login', (req, res) => {
     }
 
     bcrypt.compare(password, user.password, (err, result) => {
-      console.log("Вход парола:", password);  // Лог на въведената парола
-      console.log("Хеширана парола:", user.password); // Лог на хешираната парола
       if (err) {
         console.error("Грешка при сравнение на пароли:", err.message);
-        return res.status(500).send("Грешка при проверка на паролата.");
+        return res.status(500).send("Грешка при сравняване на пароли.");
       }
-    
+
       if (!result) {
         return res.status(400).send("Невалидна парола.");
       }
-    
+
+      // ✅ Само ако паролата е вярна:
       req.session.user = {
         id: user.id,
         username: user.username,
         email: user.email
       };
-    
+
       return res.status(200).send("Входът е успешен!");
     });
   });
 });
-
 
 // Сервиране на статични файлове от папката public (HTML, CSS, JS, аудио, изображения и т.н.)
 app.use(express.static('public'));

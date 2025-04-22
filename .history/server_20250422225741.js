@@ -207,23 +207,22 @@ app.post('/login', (req, res) => {
     }
 
     bcrypt.compare(password, user.password, (err, result) => {
-      console.log("Вход парола:", password);  // Лог на въведената парола
-      console.log("Хеширана парола:", user.password); // Лог на хешираната парола
       if (err) {
         console.error("Грешка при сравнение на пароли:", err.message);
-        return res.status(500).send("Грешка при проверка на паролата.");
+        return res.status(500).send("Грешка при сравняване на пароли.");
       }
-    
+
       if (!result) {
         return res.status(400).send("Невалидна парола.");
       }
-    
+
+      // ✅ Само ако паролата е вярна:
       req.session.user = {
         id: user.id,
         username: user.username,
         email: user.email
       };
-    
+
       return res.status(200).send("Входът е успешен!");
     });
   });
