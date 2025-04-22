@@ -682,7 +682,7 @@ document.getElementById('register-btn').addEventListener('click', () => {
     return;
   }
 
-  fetch('/register', {
+  fetch('/api/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, email, password })
@@ -700,21 +700,21 @@ document.getElementById('register-btn').addEventListener('click', () => {
     });
 });
 
-  fetch('/register', {
-    method: 'POST',
-    headers:   { 'Content-Type': 'application/json' },
-    credentials:'include',
-    body: JSON.stringify({ username, email, password })
-  })
-    .then(res => {
-      if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
-      return res.text();
-    })
-    .then(msg => {
-      alert(msg); // "Регистрацията е успешна!"
-      document.getElementById('register-modal').classList.add('hidden');
-    })
-    .catch(err => alert(err.message));
+  // fetch('/register', {
+  //   method: 'POST',
+  //   headers:   { 'Content-Type': 'application/json' },
+  //   credentials:'include',
+  //   body: JSON.stringify({ username, email, password })
+  // })
+  //   .then(res => {
+  //     if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
+  //     return res.text();
+  //   })
+  //   .then(msg => {
+  //     alert(msg); // "Регистрацията е успешна!"
+  //     document.getElementById('register-modal').classList.add('hidden');
+  //   })
+  //   .catch(err => alert(err.message));
 });
 
   const closeBtn = document.getElementById('close-passage-btn');
@@ -758,22 +758,22 @@ document.getElementById('register-btn')
       return alert("Попълнете всички полета.");
     }
 
-    fetch('/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password }),
-    })
-    .then(res => {
-      if (!res.ok) return res.text().then(t => { throw new Error(t) });
-      return res.text();
-    })
-    .then(msg => {
-      alert(msg); // напр. "Регистрацията е успешна!"
-      // скрий регистрация, покажи логин
-      document.getElementById('register-modal').classList.add('hidden');
-      document.getElementById('login-modal').classList.remove('hidden');
-    })
-    .catch(err => alert(err.message));
+    // fetch('/register', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ username, email, password }),
+    // })
+    // .then(res => {
+    //   if (!res.ok) return res.text().then(t => { throw new Error(t) });
+    //   return res.text();
+    // })
+    // .then(msg => {
+    //   alert(msg); // напр. "Регистрацията е успешна!"
+    //   // скрий регистрация, покажи логин
+    //   document.getElementById('register-modal').classList.add('hidden');
+    //   document.getElementById('login-modal').classList.remove('hidden');
+    // })
+    // .catch(err => alert(err.message));
   });
 
 });
@@ -1484,8 +1484,8 @@ loginBtn.addEventListener('click', () => {
   const container = document.getElementById('maze-container-active');
   const img = mazeBackgrounds[authorKey] || 'images/mazes/default.png';
   container.style.backgroundImage = `url('${img}')`;
-  container.style.backgroundSize = 'cover';
-  container.style.backgroundPosition = 'center';
+  // container.style.backgroundSize = 'cover';
+  // container.style.backgroundPosition = 'center';
   container.style.setProperty('--wall-image', `url('${img}')`);
 }
 
