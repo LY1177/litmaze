@@ -682,7 +682,7 @@ document.getElementById('register-btn').addEventListener('click', () => {
     return;
   }
 
-  fetch('/register', {
+  fetch('api/register', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, email, password })
