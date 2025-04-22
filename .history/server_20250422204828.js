@@ -1,9 +1,11 @@
 // server.js
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
-
+<<<<<<< HEAD
+// const session = require('express-session');
+=======
 const session = require('express-session');
-
+>>>>>>> fa8694a (Описваш промените)
 const bodyParser = require('body-parser');
 const path = require('path');
 

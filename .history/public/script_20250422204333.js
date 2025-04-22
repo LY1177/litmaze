@@ -564,24 +564,11 @@ function loadPassage(textId) {
 function getQuestionsForAuthor(authorName, callback) {
   // fetch(`http://localhost:3000/api/questions?author=${encodeURIComponent(authorName)}`)
      
-   fetch("https://litmaze.onrender.com/api/questions?author=" + encodeURIComponent(authorName))
+  //  fetch("https://litmaze.onrender.com/api/questions?author=" + encodeURIComponent(authorName))
     .then(r => r.json())
     .then(data => callback(data))
     .catch(err => console.error("Грешка при извличане на въпроси:", err));
 }
-
-function getQuestionsForAuthor(authorName, callback) {
-  fetch(`/api/questions?author=${encodeURIComponent(authorName)}`, {
-    credentials: 'include'
-  })
-    .then(res => {
-      if (!res.ok) throw new Error(`Неуспешно зареждане на въпроси: ${res.status}`);
-      return res.json();
-    })
-    .then(data => callback(data))
-    .catch(err => console.error("Грешка при извличане на въпроси:", err));
-}
-// Функция за извличане на въпроси (API)
 // function getQuestionsForAuthor(authorName, callback) {
 //   fetch(`/api/questions?author=${encodeURIComponent(authorName)}`, {
 //     credentials: 'include'
@@ -593,6 +580,18 @@ function getQuestionsForAuthor(authorName, callback) {
 //     .then(data => callback(data))
 //     .catch(err => console.error("Грешка при извличане на въпроси:", err));
 // }
+// Функция за извличане на въпроси (API)
+function getQuestionsForAuthor(authorName, callback) {
+  fetch(`/api/questions?author=${encodeURIComponent(authorName)}`, {
+    credentials: 'include'
+  })
+    .then(res => {
+      if (!res.ok) throw new Error(`Неуспешно зареждане на въпроси: ${res.status}`);
+      return res.json();
+    })
+    .then(data => callback(data))
+    .catch(err => console.error("Грешка при извличане на въпроси:", err));
+}
 
 // Инициализация на лабиринта
 function initMazeFromAuthor() {
@@ -660,15 +659,9 @@ document.getElementById('register-btn').addEventListener('click', () => {
     return;
   }
 // Отваряне на модалите
-// document.getElementById('open-login').addEventListener('click', () => {
-//   document.getElementById('login-modal').classList.remove('hidden');
-// });
-const openLoginBtn = document.getElementById('open-login');
-if (openLoginBtn) {
-openLoginBtn.addEventListener('click', () => {
-document.getElementById('login-modal').classList.remove('hidden');
+document.getElementById('open-login').addEventListener('click', () => {
+  document.getElementById('login-modal').classList.remove('hidden');
 });
-}
 document.getElementById('open-register-from-login').addEventListener('click', () => {
   document.getElementById('register-modal').classList.remove('hidden');
 });
@@ -689,39 +682,39 @@ document.getElementById('register-btn').addEventListener('click', () => {
     return;
   }
 
-  // fetch('/register', {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify({ username, email, password })
-  // })
-  //   .then(res => {
-  //     if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
-  //     return res.text();
-  //   })
-  //   .then(msg => {
-  //     alert(msg);  // напр. "Регистрацията е успешна!"
-  //     document.getElementById('register-modal').classList.add('hidden');
-  //   })
-  //   .catch(err => {
-  //     alert(err.message);
-  //   });
+  fetch('/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, email, password })
+  })
+    .then(res => {
+      if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
+      return res.text();
+    })
+    .then(msg => {
+      alert(msg);  // напр. "Регистрацията е успешна!"
+      document.getElementById('register-modal').classList.add('hidden');
+    })
+    .catch(err => {
+      alert(err.message);
+    });
 });
 
-  // fetch(`/api/register`, {
-  //   method: 'POST',
-  //   headers:   { 'Content-Type': 'application/json' },
-  //   credentials:'include',
-  //   body: JSON.stringify({ username, email, password })
-  // })
-  //   .then(res => {
-  //     if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
-  //     return res.text();
-  //   })
-  //   .then(msg => {
-  //     alert(msg); // "Регистрацията е успешна!"
-  //     document.getElementById('register-modal').classList.add('hidden');
-  //   })
-  //   .catch(err => alert(err.message));
+  fetch('/register', {
+    method: 'POST',
+    headers:   { 'Content-Type': 'application/json' },
+    credentials:'include',
+    body: JSON.stringify({ username, email, password })
+  })
+    .then(res => {
+      if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
+      return res.text();
+    })
+    .then(msg => {
+      alert(msg); // "Регистрацията е успешна!"
+      document.getElementById('register-modal').classList.add('hidden');
+    })
+    .catch(err => alert(err.message));
 });
 
   const closeBtn = document.getElementById('close-passage-btn');
@@ -765,22 +758,22 @@ document.getElementById('register-btn')
       return alert("Попълнете всички полета.");
     }
 
-    // fetch('/register', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ username, email, password }),
-    // })
-    // .then(res => {
-    //   if (!res.ok) return res.text().then(t => { throw new Error(t) });
-    //   return res.text();
-    // })
-    // .then(msg => {
-    //   alert(msg); // напр. "Регистрацията е успешна!"
-    //   // скрий регистрация, покажи логин
-    //   document.getElementById('register-modal').classList.add('hidden');
-    //   document.getElementById('login-modal').classList.remove('hidden');
-    // })
-    // .catch(err => alert(err.message));
+    fetch('/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password }),
+    })
+    .then(res => {
+      if (!res.ok) return res.text().then(t => { throw new Error(t) });
+      return res.text();
+    })
+    .then(msg => {
+      alert(msg); // напр. "Регистрацията е успешна!"
+      // скрий регистрация, покажи логин
+      document.getElementById('register-modal').classList.add('hidden');
+      document.getElementById('login-modal').classList.remove('hidden');
+    })
+    .catch(err => alert(err.message));
   });
 
 });
@@ -1342,60 +1335,60 @@ loginBtn.addEventListener('click', () => {
     return;
   }
 
-  // fetch(`api/login`, {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   credentials: 'include',
-  //   body: JSON.stringify({ username, password })
-  // })
-  //   .then(res => {
-  //     if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
-  //     return res.text();
-  //   })
-  //   .then(msg => {
-  //     // Успешен вход – скриваме модала
-  //     loginModal.classList.remove('visible');
-  //     loginModal.classList.add('hidden');
-  //     document.getElementById('display-username').textContent = username;
-  //     alert(msg);
-  //   })
-  //   .catch(err => alert(err.message));
+  fetch('/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ username, password })
+  })
+    .then(res => {
+      if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
+      return res.text();
+    })
+    .then(msg => {
+      // Успешен вход – скриваме модала
+      loginModal.classList.remove('visible');
+      loginModal.classList.add('hidden');
+      document.getElementById('display-username').textContent = username;
+      alert(msg);
+    })
+    .catch(err => alert(err.message));
 });
 
   // Логин
-  document.getElementById('login-btn').addEventListener('click', () => {
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
+  // document.getElementById('login-btn').addEventListener('click', () => {
+  //   const username = document.getElementById('username').value.trim();
+  //   const password = document.getElementById('password').value.trim();
   
-    if (!username || !password) {
-      alert("Моля, въведете потребителско име и парола.");
-      return;
-    }
+  //   if (!username || !password) {
+  //     alert("Моля, въведете потребителско име и парола.");
+  //     return;
+  //   }
   
-    fetch('/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',                         // за да се пусне session cookie
-      body: JSON.stringify({ username, password })
-    })
-      .then(res => {
-        if (!res.ok) {
-          return res.text().then(txt => { throw new Error(txt) });
-        }
-        return res.text();
-      })
-      .then(msg => {
-        // успешен вход
-        currentUser = username;
-        document.getElementById('display-username').textContent = currentUser;
-        loginModal.classList.remove('visible');
-        loginModal.classList.add('hidden');
-        alert(msg);  // напр. "Входът е успешен!"
-      })
-      .catch(err => {
-        alert(err.message);  // напр. "Невалидна парола."
-      });
-  });
+  //   fetch('/login', {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     credentials: 'include',                         // за да се пусне session cookie
+  //     body: JSON.stringify({ username, password })
+  //   })
+  //     .then(res => {
+  //       if (!res.ok) {
+  //         return res.text().then(txt => { throw new Error(txt) });
+  //       }
+  //       return res.text();
+  //     })
+  //     .then(msg => {
+  //       // успешен вход
+  //       currentUser = username;
+  //       document.getElementById('display-username').textContent = currentUser;
+  //       loginModal.classList.remove('visible');
+  //       loginModal.classList.add('hidden');
+  //       alert(msg);  // напр. "Входът е успешен!"
+  //     })
+  //     .catch(err => {
+  //       alert(err.message);  // напр. "Невалидна парола."
+  //     });
+  // });
   
   
   // // Бутони "Вход" на картите
@@ -1491,8 +1484,8 @@ loginBtn.addEventListener('click', () => {
   const container = document.getElementById('maze-container-active');
   const img = mazeBackgrounds[authorKey] || 'images/mazes/default.png';
   container.style.backgroundImage = `url('${img}')`;
-  // container.style.backgroundSize = 'cover';
-  // container.style.backgroundPosition = 'center';
+  container.style.backgroundSize = 'cover';
+  container.style.backgroundPosition = 'center';
   container.style.setProperty('--wall-image', `url('${img}')`);
 }
 
