@@ -232,6 +232,56 @@ app.post('/login', (req, res) => {
 
 // Сервиране на статични файлове от папката public (HTML, CSS, JS, аудио, изображения и т.н.)
 app.use(express.static('public'));
+/* ---------------------- HTML таблица с всички потребители ---------------------- */
+app.get('/admin/table', (req, res) => {
+  const adminKey = req.query.key;
+  if (adminKey !== 'demo123') {
+    return res.status(401).send("<h2>🚫 Неоторизиран достъп</h2>");
+  }
+
+  db.all("SELECT id, username, email, password FROM users", (err, rows) => {
+    if (err) {
+      console.error("Грешка при извличане на потребители:", err.message);
+      return res.status(500).send("Грешка при зареждане.");
+    }
+
+    // Създаваме HTML таблица
+    let html = `
+      <html>
+      <head>
+        <title>Потребители</title>
+        <style>
+          body { font-family: Arial; padding: 20px; }
+          table { border-collapse: collapse; width: 100%; }
+          th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+          th { background: #eee; }
+          code { font-size: 12px; }
+        </style>
+      </head>
+      <body>
+        <h2>📋 Регистрирани потребители</h2>
+        <table>
+          <tr><th>ID</th><th>Потребител</th><th>Email</th><th>Парола (bcrypt)</th></tr>
+    `;
+
+    rows.forEach(row => {
+      html += `<tr>
+        <td>${row.id}</td>
+        <td>${row.username}</td>
+        <td>${row.email}</td>
+        <td><code>${row.password}</code></td>
+      </tr>`;
+    });
+
+    html += `
+        </table>
+      </body>
+      </html>
+    `;
+
+    res.send(html);
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
