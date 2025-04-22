@@ -659,9 +659,15 @@ document.getElementById('register-btn').addEventListener('click', () => {
     return;
   }
 // Отваряне на модалите
-document.getElementById('open-login').addEventListener('click', () => {
-  document.getElementById('login-modal').classList.remove('hidden');
+// document.getElementById('open-login').addEventListener('click', () => {
+//   document.getElementById('login-modal').classList.remove('hidden');
+// });
+const openLoginBtn = document.getElementById('open-login');
+if (openLoginBtn) {
+openLoginBtn.addEventListener('click', () => {
+document.getElementById('login-modal').classList.remove('hidden');
 });
+}
 document.getElementById('open-register-from-login').addEventListener('click', () => {
   document.getElementById('register-modal').classList.remove('hidden');
 });
@@ -682,22 +688,22 @@ document.getElementById('register-btn').addEventListener('click', () => {
     return;
   }
 
-  fetch('api/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, email, password })
-  })
-    .then(res => {
-      if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
-      return res.text();
-    })
-    .then(msg => {
-      alert(msg);  // напр. "Регистрацията е успешна!"
-      document.getElementById('register-modal').classList.add('hidden');
-    })
-    .catch(err => {
-      alert(err.message);
-    });
+  // fetch('/register', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify({ username, email, password })
+  // })
+  //   .then(res => {
+  //     if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
+  //     return res.text();
+  //   })
+  //   .then(msg => {
+  //     alert(msg);  // напр. "Регистрацията е успешна!"
+  //     document.getElementById('register-modal').classList.add('hidden');
+  //   })
+  //   .catch(err => {
+  //     alert(err.message);
+  //   });
 });
 
   // fetch(`/api/register`, {
