@@ -562,9 +562,9 @@ function loadPassage(textId) {
 
 // Функция за извличане на въпроси (API)
 function getQuestionsForAuthor(authorName, callback) {
-  // fetch(`http://localhost:3000/api/questions?author=${encodeURIComponent(authorName)}`)
+  fetch(`http://localhost:3000/api/questions?author=${encodeURIComponent(authorName)}`)
      
-   fetch("https://litmaze.onrender.com/api/questions?author=" + encodeURIComponent(authorName))
+  //  fetch("https://litmaze.onrender.com/api/questions?author=" + encodeURIComponent(authorName))
     .then(r => r.json())
     .then(data => callback(data))
     .catch(err => console.error("Грешка при извличане на въпроси:", err));
@@ -659,7 +659,10 @@ document.getElementById('register-btn').addEventListener('click', () => {
     alert("Моля, попълнете всички полета.");
     return;
   }
-
+// Отваряне на модалите
+// document.getElementById('open-login').addEventListener('click', () => {
+//   document.getElementById('login-modal').classList.remove('hidden');
+// });
 const openLoginBtn = document.getElementById('open-login');
 if (openLoginBtn) {
 openLoginBtn.addEventListener('click', () => {
@@ -675,16 +678,16 @@ document.getElementById('close-register-btn').addEventListener('click', () => {
   document.getElementById('register-modal').classList.add('hidden');
 });
 
-// // Обработка на регистрация
-// document.getElementById('register-btn').addEventListener('click', () => {
-//   const username = document.getElementById('register-username').value.trim();
-//   const email    = document.getElementById('register-email').value.trim();
-//   const password = document.getElementById('register-password').value.trim();
+// Обработка на регистрация
+document.getElementById('register-btn').addEventListener('click', () => {
+  const username = document.getElementById('register-username').value.trim();
+  const email    = document.getElementById('register-email').value.trim();
+  const password = document.getElementById('register-password').value.trim();
 
-//   if (!username || !email || !password) {
-//     alert("Моля, попълнете всички полета.");
-//     return;
-//   }
+  if (!username || !email || !password) {
+    alert("Моля, попълнете всички полета.");
+    return;
+  }
 //ТУКККК
   fetch('/register', {
     method: 'POST',
@@ -703,7 +706,7 @@ document.getElementById('close-register-btn').addEventListener('click', () => {
       alert(err.message);
     });
 });
-// });
+});
 
   const closeBtn = document.getElementById('close-passage-btn');
   if (closeBtn) {
@@ -745,6 +748,23 @@ document.getElementById('register-btn')
     if (!username || !email || !password) {
       return alert("Попълнете всички полета.");
     }
+
+    // fetch('/register', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ username, email, password }),
+    // })
+    // .then(res => {
+    //   if (!res.ok) return res.text().then(t => { throw new Error(t) });
+    //   return res.text();
+    // })
+    // .then(msg => {
+    //   alert(msg); // напр. "Регистрацията е успешна!"
+    //   // скрий регистрация, покажи логин
+    //   document.getElementById('register-modal').classList.add('hidden');
+    //   document.getElementById('login-modal').classList.remove('hidden');
+    // })
+    // .catch(err => alert(err.message));
   });
 
 });

@@ -562,9 +562,9 @@ function loadPassage(textId) {
 
 // Функция за извличане на въпроси (API)
 function getQuestionsForAuthor(authorName, callback) {
-  // fetch(`http://localhost:3000/api/questions?author=${encodeURIComponent(authorName)}`)
+  fetch(`http://localhost:3000/api/questions?author=${encodeURIComponent(authorName)}`)
      
-   fetch("https://litmaze.onrender.com/api/questions?author=" + encodeURIComponent(authorName))
+  //  fetch("https://litmaze.onrender.com/api/questions?author=" + encodeURIComponent(authorName))
     .then(r => r.json())
     .then(data => callback(data))
     .catch(err => console.error("Грешка при извличане на въпроси:", err));
@@ -686,24 +686,24 @@ document.getElementById('close-register-btn').addEventListener('click', () => {
 //     return;
 //   }
 //ТУКККК
-  fetch('/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, email, password })
-  })
-    .then(res => {
-      if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
-      return res.text();
-    })
-    .then(msg => {
-      alert(msg);  // напр. "Регистрацията е успешна!"
-      document.getElementById('register-modal').classList.add('hidden');
-    })
-    .catch(err => {
-      alert(err.message);
-    });
-});
+//   fetch('/register', {
+//     method: 'POST',
+//     headers: { 'Content-Type': 'application/json' },
+//     body: JSON.stringify({ username, email, password })
+//   })
+//     .then(res => {
+//       if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
+//       return res.text();
+//     })
+//     .then(msg => {
+//       alert(msg);  // напр. "Регистрацията е успешна!"
+//       document.getElementById('register-modal').classList.add('hidden');
+//     })
+//     .catch(err => {
+//       alert(err.message);
+//     });
 // });
+});
 
   const closeBtn = document.getElementById('close-passage-btn');
   if (closeBtn) {
