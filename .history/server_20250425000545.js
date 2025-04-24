@@ -114,38 +114,84 @@ app.use((req, res, next) => {
 
 
 /* ---------------------- API Endpoint за въпроси ---------------------- */
-app.get('/api/questions', async (req,res) => {
-  const authorName = req.query.author || 'all';
-  const where = authorName==='all'
-    ? {}
-    : { name: authorName };
+app.get('/api/questions', (req, res) => {
+  let authorName = req.query.author;
+  console.log("Получена заявка за въпроси за автор:", authorName);
+  let sql, params;
+  if (!authorName || authorName.trim().toLowerCase() === 'all' ||
+    authorName.trim().toLowerCase() === 'obobshtenie' ||
+    authorName.trim().toLowerCase() === 'обобщение') {
+  sql = `
+    SELECT q.id AS question_id,
+           q.question,
+           q.explanation,
+           q.type,
+           q.text_id,
+           COALESCE(qo.label, '') AS label,
+           COALESCE(qo.option_text, '') AS option_text,
+           COALESCE(qo.is_correct, 0) AS is_correct,
+           COALESCE(qo.matching_key, '') AS matching_key
+    FROM questions q
+    INNER JOIN authors a ON q.author_id = a.id
+    LEFT JOIN question_options qo ON q.id = qo.question_id
+    WHERE LOWER(a.name) NOT IN ('nvo2022', 'nvo2023', 'nvo2024')
+    ORDER BY q.id, qo.id
+  `;
+  params = [];
+} else {
+  sql = `
+    SELECT q.id AS question_id,
+           q.question,
+           q.explanation,
+           q.type,
+           q.text_id,
+           COALESCE(qo.label, '') AS label,
+           COALESCE(qo.option_text, '') AS option_text,
+           COALESCE(qo.is_correct, 0) AS is_correct,
+           COALESCE(qo.matching_key, '') AS matching_key
+    FROM questions q
+    INNER JOIN authors a ON q.author_id = a.id
+    LEFT JOIN question_options qo ON q.id = qo.question_id
+    WHERE a.name = ?
+    ORDER BY q.id, qo.id
+  `;
+  params = [authorName];
+}
+    
+  db.all(sql, params, (err, rows) => {
+    if (err) {
+      console.error("Error fetching questions:", err);
+      return res.status(500).json({ error: err.message });
+    }
+    const questionsMap = {};
 
-  const questionsRaw = await Question.findAll({
-    include: [
-      { model: Author, where, attributes:[] },
-      { model: QuestionOption, attributes:['label','option_text','is_correct','matching_key'] }
-    ],
-    order:[['id','ASC']]
+    rows.forEach(row => {
+      if (!questionsMap[row.question_id]) {
+        questionsMap[row.question_id] = {
+          id: row.question_id,
+          question: row.question,
+          explanation: row.explanation,
+          type: row.type,
+          textId: row.text_id, // <-- Записваме text_id в обекта
+          options: []
+        };
+      }
+      // опции (label, option_text, matching_key)
+      if (row.label !== '' || row.option_text !== '' || row.matching_key !== '') {
+        questionsMap[row.question_id].options.push({
+          label: row.label,
+          option_text: row.option_text,
+          matching_key: row.matching_key,
+          is_correct: row.is_correct == 1
+        });
+      }
+    });
+    
+    let questions = Object.values(questionsMap);
+    console.log("Намерени въпроси:", questions);
+    res.json(questions);
   });
-
-  // Превръщаш в желания JSON формат
-  const questions = questionsRaw.map(q => ({
-    id: q.id,
-    question: q.question,
-    explanation: q.explanation,
-    type: q.type,
-    textId: q.text_id,
-    options: q.QuestionOptions.map(o => ({
-      label: o.label,
-      option_text: o.option_text,
-      is_correct: o.is_correct,
-      matching_key: o.matching_key
-    }))
-  }));
-
-  res.json(questions);
 });
-
 
 
 /* ---------------------- API Endpoint за регистрация ---------------------- */
