@@ -25,9 +25,10 @@ const serveIndex = require('serve-index');
 // });
 const { Sequelize, DataTypes } = require('sequelize');
 const isProd = !!process.env.DATABASE_URL;
+const sequelize = new Sequelize(…);
 
 // Избираме dialect според това дали сме в продукция или локално
-const sequelize = isProd
+// const sequelize = isProd
 
   ? new Sequelize(process.env.DATABASE_URL, {
       dialect: 'postgres',

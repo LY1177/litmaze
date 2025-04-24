@@ -28,7 +28,6 @@ const isProd = !!process.env.DATABASE_URL;
 
 // Избираме dialect според това дали сме в продукция или локално
 const sequelize = isProd
-
   ? new Sequelize(process.env.DATABASE_URL, {
       dialect: 'postgres',
       dialectOptions: { ssl: { rejectUnauthorized: false } }
@@ -37,27 +36,7 @@ const sequelize = isProd
       dialect: 'sqlite',
       storage: path.join(__dirname, 'mydb.db')
     });
-    (async () => {
-      try {
-        // Прочитаме целия mysql.sql
-        const sql = fs.readFileSync(path.join(__dirname, 'mysql.sql'), 'utf8');
-    
-        // Разделяме на отделни statements
-        const statements = sql
-          .split(';')
-          .map(s => s.trim())
-          .filter(s => s.length);
-    
-        console.log(`Импортирам ${statements.length} SQL statements…`);
-        for (let stmt of statements) {
-          await sequelize.query(stmt);
-        }
-        console.log('✅ Данните от mysql.sql са импортирани успешно.');
-      } catch (err) {
-        console.error('❌ Грешка при автоматичното импортиране на SQL:', err);
-      }
-    })();
-    
+
 // Дефинираме User модела
 const User = sequelize.define('User', {
   id:       { type: DataTypes.INTEGER,  primaryKey: true, autoIncrement: true },

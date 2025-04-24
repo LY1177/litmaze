@@ -28,6 +28,7 @@ const isProd = !!process.env.DATABASE_URL;
 
 // Избираме dialect според това дали сме в продукция или локално
 const sequelize = isProd
+const sequelize = new Sequelize(…);
 
   ? new Sequelize(process.env.DATABASE_URL, {
       dialect: 'postgres',
