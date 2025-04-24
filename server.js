@@ -258,7 +258,7 @@ app.get('/admin/table', (req, res) => {
     return res.status(401).send("<h2>🚫 Неоторизиран достъп</h2>");
   }
 
-  db.all("SELECT id, username, email, password FROM users", (err, rows) => {
+  db.all("SELECT id, username, email, password, points  FROM users", (err, rows) => {
     if (err) {
       console.error("Грешка при извличане на потребители:", err.message);
       return res.status(500).send("Грешка при зареждане.");
@@ -269,8 +269,7 @@ app.get('/admin/table', (req, res) => {
       <style>table { border-collapse: collapse; width: 100%; } th, td { border: 1px solid #ccc; padding: 8px; }
       th { background: #eee; } code { font-size: 12px; }</style></head><body>
       <h2>📋 Регистрирани потребители</h2>
-      <table><tr><th>ID</th><th>Потребител</th><th>Email</th><th>Парола (bcrypt)</th></tr>
-    `;
+<tr><th>ID</th><th>Потребител</th><th>Email</th><th>Парола (bcrypt)</th><th>Точки</th></tr>    `;
 
     rows.forEach(row => {
       html += `<tr>
@@ -278,6 +277,7 @@ app.get('/admin/table', (req, res) => {
         <td>${row.username}</td>
         <td>${row.email}</td>
         <td><code>${row.password}</code></td>
+        <td>${row.points}</td>
       </tr>`;
     });
 
