@@ -6,6 +6,8 @@ const express = require('express');
 // const sqlite3 = require('sqlite3').verbose();
 const session = require('express-session');
 const bodyParser = require('body-parser');
+
+
 const app = express();
 const port = 3000;
 const bcrypt = require('bcrypt');
@@ -33,21 +35,27 @@ const sequelize = isProd
       dialect: 'sqlite',
       storage: path.join(__dirname, 'mydb.db')
     });
-    async function init() {
-      // 1) Импорт на mysql.sql само в production
-      if (isProd) {
-        try {
-          const sql = fs.readFileSync(path.join(__dirname, 'mysql.sql'), 'utf8');
-          const stmts = sql.split(';').map(s=>s.trim()).filter(s=>s);
-          console.log(`Импортирам ${stmts.length} SQL statements…`);
-          for (let stmt of stmts) {
-            await sequelize.query(stmt);
-          }
-          console.log('✅ Данните от mysql.sql са импортирани успешно.');
-        } catch (err) {
-          console.error('❌ Грешка при автоматично импортиране на SQL:', err);
+    (async () => {
+      try {
+        // Прочитаме целия mysql.sql
+        const sql = fs.readFileSync(path.join(__dirname, 'mysql.sql'), 'utf8');
+    
+        // Разделяме на отделни statements
+        const statements = sql
+          .split(';')
+          .map(s => s.trim())
+          .filter(s => s.length);
+    
+        console.log(`Импортирам ${statements.length} SQL statements…`);
+        for (let stmt of statements) {
+          await sequelize.query(stmt);
         }
+        console.log('✅ Данните от mysql.sql са импортирани успешно.');
+      } catch (err) {
+        console.error('❌ Грешка при автоматичното импортиране на SQL:', err);
       }
+    })();
+    
 // Дефинираме User модела
 const User = sequelize.define('User', {
   id:       { type: DataTypes.INTEGER,  primaryKey: true, autoIncrement: true },
