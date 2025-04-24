@@ -11,7 +11,7 @@ const app = express();
 const port = 3000;
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-// const serveIndex = require('serve-index');
+const serveIndex = require('serve-index');
 // Отваряне на SQLite базата данни (mydb.db)
 // const db = new sqlite3.Database(path.join(__dirname, 'mydb.db'), (err) => {
 //   if (err) {
