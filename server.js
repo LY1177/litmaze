@@ -258,33 +258,60 @@ app.get('/admin/table', (req, res) => {
     return res.status(401).send("<h2>🚫 Неоторизиран достъп</h2>");
   }
 
-  db.all("SELECT id, username, email, password, points  FROM users", (err, rows) => {
-    if (err) {
-      console.error("Грешка при извличане на потребители:", err.message);
-      return res.status(500).send("Грешка при зареждане.");
-    }
+  db.all("SELECT id, username, email, password, points FROM users", (err, rows) => {
+    if (err) return res.status(500).send("Грешка при зареждане.");
 
+    // Тук ще поправим HTML-а
     let html = `
-      <html><head><title>Потребители</title>
-      <style>table { border-collapse: collapse; width: 100%; } th, td { border: 1px solid #ccc; padding: 8px; }
-      th { background: #eee; } code { font-size: 12px; }</style></head><body>
-      <h2>📋 Регистрирани потребители</h2>
-<tr><th>ID</th><th>Потребител</th><th>Email</th><th>Парола (bcrypt)</th><th>Точки</th></tr>    `;
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <title>Регистрирани потребители</title>
+          <style>
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #ccc; padding: 8px; }
+            th { background: #eee; }
+            code { font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <h2>📋 Регистрирани потребители</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Потребител</th>
+                <th>Email</th>
+                <th>Парола (bcrypt)</th>
+                <th>Точки</th>
+              </tr>
+            </thead>
+            <tbody>
+    `;
 
     rows.forEach(row => {
-      html += `<tr>
-        <td>${row.id}</td>
-        <td>${row.username}</td>
-        <td>${row.email}</td>
-        <td><code>${row.password}</code></td>
-        <td>${row.points}</td>
-      </tr>`;
+      html += `
+              <tr>
+                <td>${row.id}</td>
+                <td>${row.username}</td>
+                <td>${row.email}</td>
+                <td><code>${row.password}</code></td>
+                <td>${row.points}</td>
+              </tr>
+      `;
     });
 
-    html += `</table></body></html>`;
+    html += `
+            </tbody>
+          </table>
+        </body>
+      </html>
+    `;
+
     res.send(html);
   });
 });
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
