@@ -278,22 +278,22 @@ app.get('/admin/table', async (req, res) => {
   html += `</tbody></table></body></html>`;
   res.send(html);
 });
-
-app.use('/adminer',
-  express.static(path.join(__dirname,'adminer')),
-  serveIndex(path.join(__dirname,'adminer'), { icons: true })
-);
 await sequelize.sync();
   app.listen(process.env.PORT || 3000, () => {
     console.log(`🚀 Server is running on port ${process.env.PORT || 3000}`);
   });
-
+}
 
 // Пусни инициализацията
 init().catch(err => {
   console.error('❌ Фатална грешка при init():', err);
   process.exit(1);
 });
+app.use('/adminer',
+  express.static(path.join(__dirname,'adminer')),
+  serveIndex(path.join(__dirname,'adminer'), { icons: true })
+);
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

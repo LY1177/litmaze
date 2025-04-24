@@ -46,7 +46,10 @@ const sequelize = isProd
           await sequelize.query(s);
         }
         console.log(`✅ Импортирани ${stmts.length} statements.`);
-        }      
+        } 
+          console.error('❌ Грешка при автоматично импортиране на SQL:', err);
+        
+      
     }
 // Дефинираме User модела
 const User = sequelize.define('User', {
@@ -283,17 +286,7 @@ app.use('/adminer',
   express.static(path.join(__dirname,'adminer')),
   serveIndex(path.join(__dirname,'adminer'), { icons: true })
 );
-await sequelize.sync();
-  app.listen(process.env.PORT || 3000, () => {
-    console.log(`🚀 Server is running on port ${process.env.PORT || 3000}`);
-  });
 
-
-// Пусни инициализацията
-init().catch(err => {
-  console.error('❌ Фатална грешка при init():', err);
-  process.exit(1);
-});
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
