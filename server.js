@@ -1,4 +1,7 @@
 // server.js
+const fs   = require('fs');
+const path = require('path');
+
 const express = require('express');
 // const sqlite3 = require('sqlite3').verbose();
 
@@ -33,7 +36,27 @@ const sequelize = isProd
       dialect: 'sqlite',
       storage: path.join(__dirname, 'mydb.db')
     });
-
+    (async () => {
+      try {
+        // Прочитаме целия mysql.sql
+        const sql = fs.readFileSync(path.join(__dirname, 'mysql.sql'), 'utf8');
+    
+        // Разделяме на отделни statements
+        const statements = sql
+          .split(';')
+          .map(s => s.trim())
+          .filter(s => s.length);
+    
+        console.log(`Импортирам ${statements.length} SQL statements…`);
+        for (let stmt of statements) {
+          await sequelize.query(stmt);
+        }
+        console.log('✅ Данните от mysql.sql са импортирани успешно.');
+      } catch (err) {
+        console.error('❌ Грешка при автоматичното импортиране на SQL:', err);
+      }
+    })();
+    
 // Дефинираме User модела
 const User = sequelize.define('User', {
   id:       { type: DataTypes.INTEGER,  primaryKey: true, autoIncrement: true },
