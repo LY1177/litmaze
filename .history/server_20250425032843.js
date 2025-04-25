@@ -256,8 +256,7 @@ app.get('/api/me', (req, res) => {
 // Сервиране на статични файлове от папката public (HTML, CSS, JS, аудио, изображения и т.н.)
 app.use(express.static('public'));
 app.get('/admin/table', async (req, res) => {
-  const users = await User.findAll({ raw: true, order: [['id','ASC']] });
-
+  
   const adminKey = req.query.key;
   if (adminKey !== 'demo123') {
     return res.status(401).send("<h2>🚫 Неоторизиран достъп</h2>");
