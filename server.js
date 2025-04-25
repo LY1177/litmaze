@@ -36,20 +36,20 @@ const User = sequelize.define('User', {
   points:   { type: DataTypes.INTEGER,  defaultValue: 0 },
 }, { tableName: 'users', timestamps: false });
 // Уверяваме се, че таблицата users има колона points
-db.serialize(() => {
-  db.run(`
-    CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT NOT NULL UNIQUE,
-      email TEXT NOT NULL UNIQUE,
-      password TEXT NOT NULL,
-      points INTEGER DEFAULT 0,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `, err => {
-    if (err) console.error('Грешка при създаване на users:', err.message);
-  });
-});
+// db.serialize(() => {
+//   db.run(`
+//     CREATE TABLE IF NOT EXISTS users (
+//       id INTEGER PRIMARY KEY AUTOINCREMENT,
+//       username TEXT NOT NULL UNIQUE,
+//       email TEXT NOT NULL UNIQUE,
+//       password TEXT NOT NULL,
+//       points INTEGER DEFAULT 0,
+//       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+//     )
+//   `, err => {
+//     if (err) console.error('Грешка при създаване на users:', err.message);
+//   });
+// });
 
 // Middleware
 app.use(bodyParser.json());
