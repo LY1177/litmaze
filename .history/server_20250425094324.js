@@ -1,6 +1,6 @@
 // server.js
 const express = require('express');
-// const sqlite3 = require('sqlite3').verbose();
+const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -11,10 +11,10 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Отваряне (или създаване) на базата данни
-// const db = new sqlite3.Database(path.join(__dirname, 'mydb.db'), err => {
-//   if (err) console.error('Не може да се отвори БД:', err.message);
-//   else console.log('Свързахме се със SQLite базата.');
-// });
+const db = new sqlite3.Database(path.join(__dirname, 'mydb.db'), err => {
+  if (err) console.error('Не може да се отвори БД:', err.message);
+  else console.log('Свързахме се със SQLite базата.');
+});
 const sequelize = process.env.DATABASE_URL
   ? new Sequelize(process.env.DATABASE_URL, {
       dialect: 'postgres',

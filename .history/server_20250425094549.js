@@ -1,6 +1,6 @@
 // server.js
 const express = require('express');
-// const sqlite3 = require('sqlite3').verbose();
+const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const session = require('express-session');
 const bodyParser = require('body-parser');
