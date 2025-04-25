@@ -30,6 +30,16 @@ db.run(
     if (err) console.error('Грешка при създаване на users:', err.message);
   }
 );
+// Създаваме таблицата за текстове, ако не съществува
+db.run(
+  `CREATE TABLE IF NOT EXISTS texts (
+     id INTEGER PRIMARY KEY AUTOINCREMENT,
+     title TEXT,
+     content TEXT
+   )`, err => {
+    if (err) console.error('Грешка при създаване на texts:', err.message);
+  }
+);
 
 // Middleware
 app.use(bodyParser.json());
@@ -54,9 +64,16 @@ app.use('/adminer',
   serveIndex(path.join(__dirname, 'adminer'), { icons: true })
 );
 
-// API: текстове (не е имплементирано)
+
+// Зареждане на текст по id
 app.get('/api/texts', (req, res) => {
-  res.status(501).json({ error: 'Not implemented' });
+  const id = Number(req.query.id);
+  if (!id) return res.status(400).json({ error: 'Missing id' });
+  db.get(`SELECT content FROM texts WHERE id = ?`, [id], (err, row) => {
+    if (err)   return res.status(500).json({ error: err.message });
+    if (!row)  return res.status(404).json({ error: 'Text not found' });
+    res.json({ content: row.content });
+  });
 });
 
 // API: въпроси
