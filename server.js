@@ -15,6 +15,18 @@ const db = new sqlite3.Database(path.join(__dirname, 'mydb.db'), err => {
   if (err) console.error('Не може да се отвори БД:', err.message);
   else console.log('Свързахме се със SQLite базата.');
 });
+const { Sequelize, DataTypes } = require('sequelize');
+const path = require('path');
+// …
+const sequelize = process.env.DATABASE_URL
+  ? new Sequelize(process.env.DATABASE_URL, {
+      dialect: 'postgres',
+      dialectOptions: { ssl: { rejectUnauthorized: false } }
+    })
+  : new Sequelize({
+      dialect: 'sqlite',
+      storage: path.join(__dirname, 'mydb.db')
+    });
 
 // Уверяваме се, че таблицата users има колона points
 db.serialize(() => {
@@ -208,10 +220,18 @@ app.get('/admin/table', (req, res) => {
 //   console.log(`Server listening on port ${port}`);
 // });
 // Стартиране след sync
+// …всички ваши imports и дефиниции на модели…
+
+// Middleware и рутове…
+// (register, login, /api/questions и т.н.)
+
+// Заместете остатъчния `app.listen(...)` с това:
 async function startServer() {
   try {
+    // Синхронизация на моделите (Postgres или SQLite)
     await sequelize.sync();
     console.log('✅ Таблиците са създадени/актуализирани');
+    // Стартиране на Express
     app.listen(port, () => {
       console.log(`🚀 Server listening on port ${port}`);
     });
