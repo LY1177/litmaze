@@ -4,6 +4,8 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const { Sequelize, DataTypes } = require('sequelize');
+
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
