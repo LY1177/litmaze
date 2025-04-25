@@ -17,16 +17,15 @@ const port = process.env.PORT || 3000;
 //   if (err) console.error('Не може да се отвори БД:', err.message);
 //   else console.log('Свързахме се със SQLite базата.');
 // });
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: 'postgres',
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
-  }
-});
-
+const sequelize = process.env.DATABASE_URL
+  ? new Sequelize(process.env.DATABASE_URL, {
+      dialect: 'postgres',
+      dialectOptions: { ssl: { rejectUnauthorized: false } }
+    })
+  : new Sequelize({
+      dialect: 'sqlite',
+      storage: 'mydb.db'
+    });
 
 // Дефиниция на модел User (пример)
 const User = sequelize.define('User', {
@@ -37,20 +36,20 @@ const User = sequelize.define('User', {
   points:   { type: DataTypes.INTEGER,  defaultValue: 0 },
 }, { tableName: 'users', timestamps: false });
 // Уверяваме се, че таблицата users има колона points
-// db.serialize(() => {
-//   db.run(`
-//     CREATE TABLE IF NOT EXISTS users (
-//       id INTEGER PRIMARY KEY AUTOINCREMENT,
-//       username TEXT NOT NULL UNIQUE,
-//       email TEXT NOT NULL UNIQUE,
-//       password TEXT NOT NULL,
-//       points INTEGER DEFAULT 0,
-//       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-//     )
-//   `, err => {
-//     if (err) console.error('Грешка при създаване на users:', err.message);
-//   });
-// });
+db.serialize(() => {
+  db.run(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL UNIQUE,
+      email TEXT NOT NULL UNIQUE,
+      password TEXT NOT NULL,
+      points INTEGER DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `, err => {
+    if (err) console.error('Грешка при създаване на users:', err.message);
+  });
+});
 
 // Middleware
 app.use(bodyParser.json());

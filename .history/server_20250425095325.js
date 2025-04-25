@@ -17,16 +17,15 @@ const port = process.env.PORT || 3000;
 //   if (err) console.error('Не може да се отвори БД:', err.message);
 //   else console.log('Свързахме се със SQLite базата.');
 // });
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialect: 'postgres',
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
-  }
-});
-
+const sequelize = process.env.DATABASE_URL
+  ? new Sequelize(process.env.DATABASE_URL, {
+      dialect: 'postgres',
+      dialectOptions: { ssl: { rejectUnauthorized: false } }
+    })
+  : new Sequelize({
+      dialect: 'sqlite',
+      storage: 'mydb.db'
+    });
 
 // Дефиниция на модел User (пример)
 const User = sequelize.define('User', {
