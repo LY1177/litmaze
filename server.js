@@ -204,6 +204,21 @@ app.get('/admin/table', (req, res) => {
 });
 
 // Стартиране
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`Server listening on port ${port}`);
+// });
+// Стартиране след sync
+async function startServer() {
+  try {
+    await sequelize.sync();
+    console.log('✅ Таблиците са създадени/актуализирани');
+    app.listen(port, () => {
+      console.log(`🚀 Server listening on port ${port}`);
+    });
+  } catch (err) {
+    console.error('❌ Грешка при стартиране на сървъра:', err);
+    process.exit(1);
+  }
+}
+
+startServer();
