@@ -16,7 +16,6 @@ const db = new sqlite3.Database(path.join(__dirname, 'mydb.db'), err => {
   else console.log('Свързахме се със SQLite базата.');
 });
 const { Sequelize, DataTypes } = require('sequelize');
-const path = require('path');
 // …
 const sequelize = process.env.DATABASE_URL
   ? new Sequelize(process.env.DATABASE_URL, {
