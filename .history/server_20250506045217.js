@@ -122,7 +122,7 @@ app.use(
 app.get('/api/questions', (req, res, next) => {
   // взимаме query string-а (?author=… или ?id=…)
   const qs = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
- 
+  // променяме пътя и пускаме през същия router
   req.url = '/api/texts' + qs;
   app._router.handle(req, res, next);
 });
