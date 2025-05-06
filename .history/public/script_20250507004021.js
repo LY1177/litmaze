@@ -1322,6 +1322,25 @@ loginBtn.addEventListener('click', () => {
     alert("Моля, въведете потребителско име и парола.");
     return;
   }
+
+  // fetch(`api/login`, {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   credentials: 'include',
+  //   body: JSON.stringify({ username, password })
+  // })
+  //   .then(res => {
+  //     if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
+  //     return res.text();
+  //   })
+  //   .then(msg => {
+  //     // Успешен вход – скриваме модала
+  //     loginModal.classList.remove('visible');
+  //     loginModal.classList.add('hidden');
+  //     document.getElementById('display-username').textContent = username;
+  //     alert(msg);
+  //   })
+  //   .catch(err => alert(err.message));
 });
 
   // Логин
@@ -1359,7 +1378,16 @@ loginBtn.addEventListener('click', () => {
       });
   });
   
-
+  
+  // // Бутони "Вход" на картите
+  // document.querySelectorAll('.enter-btn').forEach(btn => {
+  //   btn.addEventListener('click', (e) => {
+  //     e.stopPropagation();
+  //     const card = e.target.closest('.card');
+  //     const author = card.dataset.author;
+  //     selectAuthor(author);
+  //   });
+  // });
   
   // // Флипване на картите при клик
   document.querySelectorAll('.card').forEach(card => {

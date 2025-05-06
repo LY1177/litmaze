@@ -232,6 +232,7 @@ app.post('/login', (req, res) => {
 
 // Сервиране на статични файлове от папката public (HTML, CSS, JS, аудио, изображения и т.н.)
 app.use(express.static('public'));
+/* ---------------------- HTML таблица с всички потребители ---------------------- */
 app.get('/admin/table', (req, res) => {
   const adminKey = req.query.key;
   if (adminKey !== 'demo123') {
@@ -244,12 +245,23 @@ app.get('/admin/table', (req, res) => {
       return res.status(500).send("Грешка при зареждане.");
     }
 
+    // Създаваме HTML таблица
     let html = `
-      <html><head><title>Потребители</title>
-      <style>table { border-collapse: collapse; width: 100%; } th, td { border: 1px solid #ccc; padding: 8px; }
-      th { background: #eee; } code { font-size: 12px; }</style></head><body>
-      <h2>📋 Регистрирани потребители</h2>
-      <table><tr><th>ID</th><th>Потребител</th><th>Email</th><th>Парола (bcrypt)</th></tr>
+      <html>
+      <head>
+        <title>Потребители</title>
+        <style>
+          body { font-family: Arial; padding: 20px; }
+          table { border-collapse: collapse; width: 100%; }
+          th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+          th { background: #eee; }
+          code { font-size: 12px; }
+        </style>
+      </head>
+      <body>
+        <h2>📋 Регистрирани потребители</h2>
+        <table>
+          <tr><th>ID</th><th>Потребител</th><th>Email</th><th>Парола (bcrypt)</th></tr>
     `;
 
     rows.forEach(row => {
@@ -261,7 +273,12 @@ app.get('/admin/table', (req, res) => {
       </tr>`;
     });
 
-    html += `</table></body></html>`;
+    html += `
+        </table>
+      </body>
+      </html>
+    `;
+
     res.send(html);
   });
 });

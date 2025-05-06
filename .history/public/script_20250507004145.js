@@ -1322,6 +1322,7 @@ loginBtn.addEventListener('click', () => {
     alert("Моля, въведете потребителско име и парола.");
     return;
   }
+
 });
 
   // Логин
@@ -1359,7 +1360,16 @@ loginBtn.addEventListener('click', () => {
       });
   });
   
-
+  
+  // // Бутони "Вход" на картите
+  // document.querySelectorAll('.enter-btn').forEach(btn => {
+  //   btn.addEventListener('click', (e) => {
+  //     e.stopPropagation();
+  //     const card = e.target.closest('.card');
+  //     const author = card.dataset.author;
+  //     selectAuthor(author);
+  //   });
+  // });
   
   // // Флипване на картите при клик
   document.querySelectorAll('.card').forEach(card => {

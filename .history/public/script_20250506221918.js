@@ -16,7 +16,7 @@ const mazeBackgrounds = {
   pelin:    'images/mazes/pelin.png',
   yordan:   'images/mazes/yordan.png',
   peyo:     'images/mazes/peyo.png',
-  pencho:    'images/mazes/pencho.png',
+  peno:    'images/mazes/petko.png',
   hristo:   'images/mazes/hristo.png',
   dobri:    'images/mazes/dobri.png',
   veselin:  'images/mazes/veselin.png',
@@ -213,8 +213,8 @@ const labyrinths = {
       ]
     }
   },
-  pencho: {
-    name: "Пенчо Славейков",
+  petko: {
+    name: "Петко Славейков",
     levels: {
       1: [
         [
@@ -517,7 +517,7 @@ const authorDisplayName = {
   "hristo": "Христо Ботев",
   "dobri": "Добри Чинтулов",
   "obobshtenie": "Обобщение",
-  "veselin": "Веселин Ханчев",
+  "petko": "Петко Славейков",
   "lyuben": "Любен Каравелов",
   "smirnenski": "Христо Смирненски",
   "nvo2022": "НВО 2022",
@@ -1016,24 +1016,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('fun-fact-modal').classList.add('hidden');
   });
 });
-//Показване на паролата
-function ShowRegisterPassword() {
-  var x = document.getElementById("register-password");
-  if (x.type === "password") {
-    x.type = "text";
-  } else {
-    x.type = "password";
-  }
-}
 
-function ShowLoginPassword() {
-  var x = document.getElementById("password");
-  if (x.type === "password") {
-    x.type = "text";
-  } else {
-    x.type = "password";
-  }
-}
 
 // Drag & drop (matching)
 function renderMatchingDragDrop(q, container, onCorrect) {
@@ -1322,6 +1305,25 @@ loginBtn.addEventListener('click', () => {
     alert("Моля, въведете потребителско име и парола.");
     return;
   }
+
+  // fetch(`api/login`, {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   credentials: 'include',
+  //   body: JSON.stringify({ username, password })
+  // })
+  //   .then(res => {
+  //     if (!res.ok) return res.text().then(txt => { throw new Error(txt) });
+  //     return res.text();
+  //   })
+  //   .then(msg => {
+  //     // Успешен вход – скриваме модала
+  //     loginModal.classList.remove('visible');
+  //     loginModal.classList.add('hidden');
+  //     document.getElementById('display-username').textContent = username;
+  //     alert(msg);
+  //   })
+  //   .catch(err => alert(err.message));
 });
 
   // Логин
@@ -1359,7 +1361,16 @@ loginBtn.addEventListener('click', () => {
       });
   });
   
-
+  
+  // // Бутони "Вход" на картите
+  // document.querySelectorAll('.enter-btn').forEach(btn => {
+  //   btn.addEventListener('click', (e) => {
+  //     e.stopPropagation();
+  //     const card = e.target.closest('.card');
+  //     const author = card.dataset.author;
+  //     selectAuthor(author);
+  //   });
+  // });
   
   // // Флипване на картите при клик
   document.querySelectorAll('.card').forEach(card => {
