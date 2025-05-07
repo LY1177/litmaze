@@ -1,8 +1,5 @@
-
-UPDATE questions
-SET question =
-  'Твърдение: „В ‚Неразделни‘  младите влюбени решават да се откажат от любовта си и се разделят по волята на родителите.“'
-WHERE id = 58;
-
+UPDATE question_options
+SET option_text = '"Под игото"'
+WHERE id = 54;
 
 

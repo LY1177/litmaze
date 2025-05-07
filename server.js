@@ -152,25 +152,6 @@ app.post('/register', (req, res) => {
     return res.status(400).send("Моля, попълнете всички полета.");
   }
   
-  // Проверка дали потребителят вече съществува
-  // db.get("SELECT * FROM users WHERE username = ? OR email = ?", [username, email], (err, row) => {
-  //   if (err) {
-  //     console.error("Грешка при проверка на потребителските данни:", err.message);
-  //     return res.status(500).send("Възникна грешка при проверка на потребителските данни.");
-  //   }
-  //   if (row) {
-  //     return res.status(400).send("Потребител с това потребителско име или имейл вече съществува.");
-  //   }
-    
-  //   // За простота записваме паролата като plain text (ще използваме по-късно хеширане, напр. с bcrypt)
-  //   db.run("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", [username, email, password], function(err) {
-  //     if (err) {
-  //       console.error("Грешка при регистрирането:", err.message);
-  //       return res.status(500).send("Възникна грешка при регистрирането.");
-  //     }
-  //     res.status(200).send("Регистрацията е успешна!");
-  //   });
-  // });
   bcrypt.hash(password, saltRounds, (err, hash) => {
   if (err) {
     console.error("Грешка при хеширане:", err.message);
