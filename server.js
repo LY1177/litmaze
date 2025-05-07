@@ -14,39 +14,6 @@ const saltRounds = 10;
 const isProd         = process.env.NODE_ENV === 'production';
 const SESSION_SECRET = process.env.SESSION_SECRET || 'dev_secret';
 
-
-// Създаваме таблица за потребители
-db.run(`CREATE TABLE IF NOT EXISTS users (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  username TEXT NOT NULL UNIQUE,
-  email TEXT NOT NULL UNIQUE,
-  password TEXT NOT NULL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-)`, (err) => {
-  if (err) console.error('Грешка при създаване на таблицата за потребители:', err.message);
-  else console.log('Таблицата за потребители е готова.');
-});
-
-db.run(`CREATE TABLE IF NOT EXISTS scores (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id INTEGER NOT NULL,
-  points INTEGER NOT NULL,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY(user_id) REFERENCES users(id)
-)`);
-
-app.get('/api/texts', (req, res) => {
-  const textId = req.query.id;
-  db.get("SELECT content FROM texts WHERE id = ?", [textId], (err, row) => {
-    if (err) {
-      console.error("Грешка при извличане на текста:", err);
-      return res.status(500).json({ error: err.message });
-    }
-    if (!row) {
-      return res.status(404).json({ error: "Текстът не е намерен." });
-    }
-    res.json(row);
-
 let pool;
 let sessionStore;
 
@@ -57,7 +24,6 @@ if (isProd && process.env.DATABASE_URL) {
   pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false },
-3
   });
   const PgSession = require('connect-pg-simple')(session);
   sessionStore = new PgSession({
@@ -227,36 +193,6 @@ app.post('/register', async (req, res) => {
     console.error('Registration error:', err);
     res.status(500).send('Грешка при регистрация.');
   }
-
-  // server.js (след регистрацията)
-app.post('/api/scores', (req, res) => {
-  if (!req.session.user) return res.status(401).send('Не сте влезли');
-  const userId = req.session.user.id;
-  const { points } = req.body;
-  db.run(
-    "INSERT INTO scores (user_id, points) VALUES (?, ?)",
-    [userId, points],
-    function(err) {
-      if (err) return res.status(500).send('Грешка при запис на точки');
-      res.sendStatus(200);
-    }
-  );
-});
-
-  bcrypt.hash(password, saltRounds, (err, hash) => {
-  if (err) {
-    console.error("Грешка при хеширане:", err.message);
-    return res.status(500).send("Грешка при криптиране на паролата.");
-  }
-
-  db.run("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", [username, email, hash], function(err) {
-    if (err) {
-      console.error("Грешка при регистрирането:", err.message);
-      return res.status(500).send("Възникна грешка при регистрирането.");
-    }
-    res.status(200).send("Регистрацията е успешна!");
-  });
-
 });
 
 // 3) Вход
@@ -277,6 +213,7 @@ app.post('/login', async (req, res) => {
     res.status(500).send('Грешка при проверка.');
   }
 });
+
 // 4) Добавяне на точки
 app.post('/api/points', async (req, res) => {
   if (!req.session.user) return res.status(401).send('Няма активна сесия.');
@@ -294,7 +231,6 @@ app.post('/api/points', async (req, res) => {
   } catch (err) {
     console.error('Points update error:', err);
     res.status(500).send('Грешка при update на точки.');
-
   }
 });
 
@@ -324,7 +260,6 @@ app.get('/api/online-users', async (req, res) => {
   }
 });
 
-
 // 7) Админ табличка
 app.get('/admin/table', async (req, res) => {
   if (!req.session.user || req.session.user.username !== 'admin')
@@ -338,7 +273,6 @@ app.get('/admin/table', async (req, res) => {
       </head><body><h2>📋 Регистрирани потребители</h2><table>
       <tr><th>ID</th><th>Потребител</th><th>Email</th><th>Парола (хеш)</th><th>Точки</th></tr>`;
     result.rows.forEach(r => {
-
       html += `<tr>
         <td>${r.id}</td>
         <td>${r.username}</td>
@@ -354,36 +288,8 @@ app.get('/admin/table', async (req, res) => {
     res.status(500).send('Грешка при зареждане.');
   }
 });
-// server.js
-app.get('/api/scores', (req, res) => {
-  if (!req.session.user) return res.status(401).send('Не сте влезли');
-  const userId = req.session.user.id;
-  const period = req.query.period; // 'week' или 'month'
-  let since = period === 'month' ? "datetime('now','-1 month')" : "datetime('now','-7 days')";
-  const sql = `
-    SELECT COALESCE(SUM(points),0) AS total
-    FROM scores
-    WHERE user_id = ? AND created_at >= ${since}
-  `;
-  db.get(sql, [userId], (err, row) => {
-    if (err) return res.status(500).send('Грешка при четене на точки');
-    res.json({ total: row.total });
-  });
-});
-
-// Сервиране на статични файлове от папката public (HTML, CSS, JS, аудио, изображения и т.н.)
-app.use(express.static('public'));
-app.get('/admin/table', (req, res) => {
-  const adminKey = req.query.key;
-  if (adminKey !== 'demo123') {
-    return res.status(401).send("<h2>🚫 Неоторизиран достъп</h2>")
-  }
-
-
-
 
 // --- Стартиране на сървъра ---
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
-  
