@@ -11,7 +11,6 @@
   <script src="script.js" defer></script>
 </head>
 <body>
- 
   <!-- Главен контейнер, който ограничава ширината на проекта (не е full-screen) -->
   <div id="main-container">
     
@@ -21,11 +20,12 @@
         <h2>Литературен лабиринт</h2>
         <input type="text" id="username" placeholder="Потребителско име">
         <input type="password" id="password" placeholder="Парола">
-        <div class="modal-buttons">          <input type="checkbox" onclick="ShowLoginPassword()" class="passbox">Покажи паролата
+        <div class="modal-buttons">
+          <input type="checkbox" onclick="ShowLoginPassword()" class="passbox">Покажи паролата
           <button id="login-btn" class="btn">Влез</button>
           <button id="open-register-from-login" class="btn">Регистрация</button>
         </div>
-      </div>
+              </div>
     </div>
     <!-- Регистрационен модал -->
     <div id="register-modal" class="modal hidden">
@@ -35,7 +35,6 @@
         <input type="email"   id="register-email"    placeholder="Имейл">
         <input type="password" id="register-password" placeholder="Парола">
         <div class="modal-buttons">
-          <input type="checkbox" onclick="ShowRegisterPassword()" class="passbox">Покажи паролата>
           <button id="register-btn"        class="btn">Регистрация</button>
           <button id="close-register-btn"  class="btn">Затвори</button>
         </div>
@@ -49,12 +48,10 @@
       <header id="top-bar">
         <h1 id="labyrinth-title">Лабиринт</h1>
         <div id="user-info">
-          
+          Потребител: <span id="display-username"></span> |
           Ниво: <span id="current-level">1</span> |
-         
-            Потребител,  <span id="display-username"></span><strong><span id="display-username"></span></strong>! 
-            Точки: <strong><span id="score">0</span></strong>
-                  </div>
+          Точки: <span id="score">0</span>
+        </div>
         <div id="button-row">
           <button id="back-to-authors" class="nav-btn">Назад към авторите</button>
           <button id="next-level" class="nav-btn hidden">Следващо ниво</button>
@@ -80,7 +77,8 @@
   <button id="rules-btn" class="btn">Правила на играта</button>
   <button id="nvo-btn" class="btn">НВО</button>
  </div>
-       
+
+      
       <!-- Мрежа с 12 карти -->
       <div class="card-container">
         <!-- Карта 1: Иван Вазов -->
