@@ -32,7 +32,8 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
   if (err) console.error('Грешка при създаване на таблицата за потребители:', err.message);
   else console.log('Таблицата за потребители е готова.');
 });
-
+// server.js
+// … над този ред:
 db.run(`CREATE TABLE IF NOT EXISTS scores (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL,
@@ -160,21 +161,26 @@ app.post('/register', (req, res) => {
   if (!username || !email || !password) {
     return res.status(400).send("Моля, попълнете всички полета.");
   }
-  // server.js (след регистрацията)
-app.post('/api/scores', (req, res) => {
-  if (!req.session.user) return res.status(401).send('Не сте влезли');
-  const userId = req.session.user.id;
-  const { points } = req.body;
-  db.run(
-    "INSERT INTO scores (user_id, points) VALUES (?, ?)",
-    [userId, points],
-    function(err) {
-      if (err) return res.status(500).send('Грешка при запис на точки');
-      res.sendStatus(200);
-    }
-  );
-});
-
+  
+  // Проверка дали потребителят вече съществува
+  // db.get("SELECT * FROM users WHERE username = ? OR email = ?", [username, email], (err, row) => {
+  //   if (err) {
+  //     console.error("Грешка при проверка на потребителските данни:", err.message);
+  //     return res.status(500).send("Възникна грешка при проверка на потребителските данни.");
+  //   }
+  //   if (row) {
+  //     return res.status(400).send("Потребител с това потребителско име или имейл вече съществува.");
+  //   }
+    
+  //   // За простота записваме паролата като plain text (ще използваме по-късно хеширане, напр. с bcrypt)
+  //   db.run("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", [username, email, password], function(err) {
+  //     if (err) {
+  //       console.error("Грешка при регистрирането:", err.message);
+  //       return res.status(500).send("Възникна грешка при регистрирането.");
+  //     }
+  //     res.status(200).send("Регистрацията е успешна!");
+  //   });
+  // });
   bcrypt.hash(password, saltRounds, (err, hash) => {
   if (err) {
     console.error("Грешка при хеширане:", err.message);
@@ -267,22 +273,6 @@ app.get('/admin/table', (req, res) => {
 
     html += `</table></body></html>`;
     res.send(html);
-  });
-});
-// server.js
-app.get('/api/scores', (req, res) => {
-  if (!req.session.user) return res.status(401).send('Не сте влезли');
-  const userId = req.session.user.id;
-  const period = req.query.period; // 'week' или 'month'
-  let since = period === 'month' ? "datetime('now','-1 month')" : "datetime('now','-7 days')";
-  const sql = `
-    SELECT COALESCE(SUM(points),0) AS total
-    FROM scores
-    WHERE user_id = ? AND created_at >= ${since}
-  `;
-  db.get(sql, [userId], (err, row) => {
-    if (err) return res.status(500).send('Грешка при четене на точки');
-    res.json({ total: row.total });
   });
 });
 

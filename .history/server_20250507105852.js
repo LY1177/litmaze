@@ -269,22 +269,6 @@ app.get('/admin/table', (req, res) => {
     res.send(html);
   });
 });
-// server.js
-app.get('/api/scores', (req, res) => {
-  if (!req.session.user) return res.status(401).send('Не сте влезли');
-  const userId = req.session.user.id;
-  const period = req.query.period; // 'week' или 'month'
-  let since = period === 'month' ? "datetime('now','-1 month')" : "datetime('now','-7 days')";
-  const sql = `
-    SELECT COALESCE(SUM(points),0) AS total
-    FROM scores
-    WHERE user_id = ? AND created_at >= ${since}
-  `;
-  db.get(sql, [userId], (err, row) => {
-    if (err) return res.status(500).send('Грешка при четене на точки');
-    res.json({ total: row.total });
-  });
-});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

@@ -748,15 +748,6 @@ document.getElementById('register-btn')
   });
 
 });
-async function loadAggregatedScores() {
-  const week = await fetch('/api/scores?period=week', { credentials:'include' })
-                      .then(r => r.json());
-  const month = await fetch('/api/scores?period=month', { credentials:'include' })
-                       .then(r => r.json());
-  document.getElementById('week-score').textContent = week.total;
-  document.getElementById('month-score').textContent = month.total;
-}
-// извиквай loadAggregatedScores() веднага след успешен вход и след всяко updateScore
 
 
 // Инициализация на revealedMaze
