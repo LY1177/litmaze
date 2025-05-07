@@ -14,33 +14,33 @@
  
   <!-- Главен контейнер, който ограничава ширината на проекта (не е full-screen) -->
   <div id="main-container">
-    
-    <!-- 1) Логин модал -->
-    <div id="login-modal" class="modal visible">
-      <div class="modal-content">
-        <h2>Литературен лабиринт</h2>
-        <input type="text" id="username" placeholder="Потребителско име">
-        <input type="password" id="password" placeholder="Парола">
-        <div class="modal-buttons">          <input type="checkbox" onclick="ShowLoginPassword()" class="passbox">Покажи паролата
-          <button id="login-btn" class="btn">Влез</button>
-          <button id="open-register-from-login" class="btn">Регистрация</button>
-        </div>
-      </div>
+<!-- 1) Логин модал -->
+<div id="login-modal" class="modal visible">
+  <div class="modal-content">
+    <h2>Литературен лабиринт</h2>
+    <input type="text" id="username" placeholder="Потребителско име">
+    <input type="password" id="password" placeholder="Парола">
+    <div class="modal-buttons">
+      <input type="checkbox" onclick="ShowLoginPassword()" class="passbox">Покажи паролата
+      <button id="login-btn" class="btn">Влез</button>
+      <button id="open-register-from-login" class="btn">Регистрация</button>
     </div>
-    <!-- Регистрационен модал -->
-    <div id="register-modal" class="modal hidden">
-      <div class="modal-content">
-        <h2>Регистрация</h2>
-        <input type="text"    id="register-username" placeholder="Потребителско име">
-        <input type="email"   id="register-email"    placeholder="Имейл">
-        <input type="password" id="register-password" placeholder="Парола">
-        <div class="modal-buttons">
-          <input type="checkbox" onclick="ShowRegisterPassword()" class="passbox">Покажи паролата>
-          <button id="register-btn"        class="btn">Регистрация</button>
-          <button id="close-register-btn"  class="btn">Затвори</button>
-        </div>
-      </div>
+  </div>
+</div>
+<!-- Регистрационен модал -->
+<div id="register-modal" class="modal hidden">
+  <div class="modal-content">
+    <h2>Регистрация</h2>
+    <input type="text" id="register-username" placeholder="Потребителско име">
+    <input type="email" id="register-email" placeholder="Имейл">
+    <input type="password" id="register-password" placeholder="Парола">
+    <div class="modal-buttons">
+      <input type="checkbox" onclick="ShowRegisterPassword()" class="passbox">Покажи паролата
+      <button id="register-btn" class="btn">Регистрация</button>
+      <button id="close-register-btn" class="btn">Затвори</button>
     </div>
+  </div>
+</div>
 
 
     <!-- 2) Екран за лабиринта (скрит по начало) -->
