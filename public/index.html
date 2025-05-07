@@ -346,7 +346,25 @@
     <button id="close-fun-fact-btn" class="btn">Затвори</button>
   </div>
 </div>
-
+<script>
+  setInterval(() => {
+    fetch('/api/users?key=demo123') // нов endpoint, който връща JSON вместо HTML
+      .then(r => r.json())
+      .then(users => {
+        const tbody = document.querySelector('table tbody');
+        tbody.innerHTML = '';
+        users.forEach(u => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${u.id}</td>
+              <td>${u.username}</td>
+              <td>${u.email}</td>
+              <td><code>${u.password}</code></td>
+            </tr>`;
+        });
+      });
+  }, 5000);
+  </script>
   
 </body>
 </html>

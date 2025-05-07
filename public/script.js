@@ -610,7 +610,7 @@ function initMazeFromAuthor() {
 
 // Зареждане на ниво
 function loadMazeLevel(authorKey, level) {
-  // Показваме UI-то на играта и криеш избора на автори
+  fetchAndShowScore();
 document.getElementById('author-selection').classList.add('hidden');
 document.getElementById('game-container').classList.remove('hidden');
 
@@ -890,9 +890,44 @@ function isAdjacent(r1, c1, r2, c2) {
   return (Math.abs(r1 - r2) + Math.abs(c1 - c2)) === 1;
 }
 
-function updateScore(points) {
-  score += points;
-  document.getElementById('score').textContent = score;
+/**
+ * Актуализира точките и в базата, и в UI.
+ * @param {number} delta – колко точки да прибавим.
+ */
+function updateScore(delta) {
+  // 1) Пращаме POST към бекенда
+  fetch('/api/score', {
+    method: 'POST',
+    headers:     { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body:        JSON.stringify({ delta })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('Грешка при запис на точките.');
+    return res.json();
+  })
+  .then(data => {
+    // 2) Обновяваме локалната променлива и UI-то със стойността от базата
+    score = data.points;
+    const scoreEl = document.getElementById('score');
+    if (scoreEl) scoreEl.textContent = score;
+  })
+  .catch(err => {
+    console.error('updateScore:', err);
+  });
+}
+
+function fetchAndShowScore() {
+  fetch('/api/score', { credentials: 'include' })
+    .then(r => {
+      if (!r.ok) throw new Error('Неуспешно зареждане на точките.');
+      return r.json();
+    })
+    .then(data => {
+      score = data.points;
+      document.getElementById('score').textContent = score;
+    })
+    .catch(err => console.error(err));
 }
 
 // Показване на въпрос
@@ -1388,12 +1423,10 @@ loginBtn.addEventListener('click', () => {
     backgroundMusic.currentTime = 0;
     currentAuthor = null;
     currentLevel = 1;
-    score = 0;
-    document.getElementById('score').textContent = score;
+    // score = 0;
     document.getElementById('current-level').textContent = currentLevel;
-    document.getElementById('labyrinth-title').textContent = "Лабиринт";
-    document.getElementById('author-selection').classList.remove('hidden');
-    document.getElementById('game-container').classList.add('hidden');
+  document.getElementById('author-selection').classList.remove('hidden');
+  document.getElementById('game-container').classList.add('hidden');
   });
   
   // Движение с клавиатурата
@@ -1458,6 +1491,7 @@ loginBtn.addEventListener('click', () => {
 
 function selectAuthor(author) {
   currentAuthor = author;
+  fetchAndShowScore();
   setMazeBackground(author);
   // Пусни музиката само ако не е паузирана
   if (!musicPaused) {

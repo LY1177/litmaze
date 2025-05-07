@@ -27,7 +27,9 @@ db.run(`CREATE TABLE IF NOT EXISTS users (
   username TEXT NOT NULL UNIQUE,
   email TEXT NOT NULL UNIQUE,
   password TEXT NOT NULL,
+  points INTEGER DEFAULT 0,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  
 )`, (err) => {
   if (err) console.error('Грешка при създаване на таблицата за потребители:', err.message);
   else console.log('Таблицата за потребители е готова.');
@@ -142,6 +144,25 @@ app.get('/api/questions', (req, res) => {
     res.json(questions);
   });
 });
+app.get('/api/score', (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: "Не сте влезли" });
+  db.get(
+    "SELECT points FROM users WHERE id = ?",
+    [req.session.user.id],
+    (err, row) => {
+      if (err) {
+        console.error("DB грешка в /api/score:", err.message);
+        return res.status(500).json({ error: "Вътрешна грешка" });
+      }
+      if (!row) {
+        // няма такъв потребител
+        return res.status(404).json({ error: "Потребителят не е намерен" });
+      }
+      res.json({ points: row.points });
+    }
+  );
+});
+
 
 
 /* ---------------------- API Endpoint за регистрация ---------------------- */
@@ -188,28 +209,74 @@ app.post('/login', (req, res) => {
     }
 
     bcrypt.compare(password, user.password, (err, result) => {
-      console.log("Вход парола:", password);  // Лог на въведената парола
-      console.log("Хеширана парола:", user.password); // Лог на хешираната парола
       if (err) {
         console.error("Грешка при сравнение на пароли:", err.message);
         return res.status(500).send("Грешка при проверка на паролата.");
       }
-    
+  
       if (!result) {
         return res.status(400).send("Невалидна парола.");
       }
-    
+
+      // Премахнати са ъпдейтите на точките от тук!
       req.session.user = {
         id: user.id,
         username: user.username,
         email: user.email
       };
-    
+      // Връщаме успешен вход
       return res.status(200).send("Входът е успешен!");
     });
   });
 });
 
+app.get('/api/users', (req, res) => {
+  if (req.query.key !== 'demo123') return res.status(401).send();
+  db.all(
+    "SELECT id, username, email, password FROM users",
+    (err, rows) => {
+      if (err) return res.status(500).send();
+      res.json(rows);
+    }
+  );
+});
+
+// Връща текущите точки
+app.get('/api/score', (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: "Не сте влезли" });
+  db.get(
+    "SELECT points FROM users WHERE id = ?",
+    [req.session.user.id],
+    (err, row) => {
+      if (err) return res.status(500).json({ error: "DB грешка" });
+      res.json({ points: row.points });
+    }
+  );
+});
+
+// Инкремент на точки
+app.post('/api/score', express.json(), (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: "Не сте влезли" });
+  const { delta } = req.body;
+  // защита — да не вкараш отрицателни или твърде големи стойности
+  const inc = Math.max(0, Math.min(delta, 1000));
+  db.run(
+    "UPDATE users SET points = points + ? WHERE id = ?",
+    [inc, req.session.user.id],
+    err => {
+      if (err) return res.status(500).json({ error: "DB грешка при ъпдейт" });
+      // връщаме новата стойност
+      db.get(
+        "SELECT points FROM users WHERE id = ?",
+        [req.session.user.id],
+        (err2, row) => {
+          if (err2) return res.status(500).json({ error: "DB грешка" });
+          res.json({ points: row.points });
+        }
+      );
+    }
+  );
+});
 
 // Сервиране на статични файлове от папката public (HTML, CSS, JS, аудио, изображения и т.н.)
 app.use(express.static('public'));
