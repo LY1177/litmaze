@@ -241,24 +241,21 @@ app.get('/api/me', (req, res) => {
 });
 
 // 6) Онлайн потребители (последните 5 минути)
+// 6) Онлайн потребители (последните 5 минути)
 app.get('/api/online-users', async (req, res) => {
   try {
-    let result;
-    if (isProd) {
-      result = await query(`
-        SELECT username, points FROM users
-        WHERE last_seen > CURRENT_TIMESTAMP - INTERVAL '5 minutes';`);
-    } else {
-      result = await query(`
-        SELECT username, points FROM users
-        WHERE last_seen > datetime('now','-5 minutes');`);
-    }
+    const result = await query(`
+      SELECT username, points
+      FROM users
+      WHERE last_seen > datetime('now','-5 minutes');
+    `);
     res.json(result.rows);
   } catch (err) {
     console.error('/api/online-users error:', err);
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // 7) Админ табличка
 app.get('/admin/table', async (req, res) => {
