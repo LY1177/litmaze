@@ -610,6 +610,10 @@ function initMazeFromAuthor() {
 
 // Зареждане на ниво
 function loadMazeLevel(authorKey, level) {
+  // Показваме UI-то на играта и криеш избора на автори
+document.getElementById('author-selection').classList.add('hidden');
+document.getElementById('game-container').classList.remove('hidden');
+
   // задаваме фоновото изображение за този автор
    setMazeBackground(authorKey);
   const levelMazes = labyrinths[authorKey].levels[level];
