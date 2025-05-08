@@ -39,7 +39,7 @@ const seedPath = path.join(__dirname, 'public', 'seed', 'mydb.db');
 const diskPath = path.join('/data', 'mydb.db');
 
 // 1) Ако на диска още няма база, копираме seed-а
-// if (!fs.existsSync(diskPath)) {
+if (!fs.existsSync(diskPath)) {
 //   fs.copyFileSync(seedPath, diskPath);
 //   console.log('Seed-базата е копирана на persistent disk');
 // }
@@ -49,6 +49,7 @@ try {
   console.log('✔ [SEED] Seed-базата е копирана на persistent disk');
 } catch (e) {
   console.error('❌ [SEED] Не може да копира seed-базата:', e.message);
+}
 }
 
 
