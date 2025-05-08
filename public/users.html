@@ -1,22 +1,67 @@
-<!-- public/users.html -->
 <!DOCTYPE html>
 <html lang="bg">
-<head><meta charset="UTF-8"><title>Потребители (Live)</title></head>
+<head>
+  <meta charset="UTF-8">
+  <title>Потребители (Live)</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { padding: 0.5rem; border: 1px solid #aaa; text-align: left; }
+    thead { background: #eee; }
+  </style>
+</head>
 <body>
-  <h2>Регистрирани потребители (авто-6sec)</h2>
-  <table id="users-table" border="1" cellpadding="5">
-    <tr><th>ID</th><th>Потребител</th><th>Email</th><th>Парола (bcrypt)</th></tr>
+  <h1>Регистрирани потребители</h1>
+  <table id="users-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Потребител</th>
+        <th>Email</th>
+        <th>Парола (hash)</th>
+        <th>Точки</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- JS ще попълни редовете тук -->
+    </tbody>
   </table>
+
   <script>
     async function loadUsers() {
-      const res = await fetch('/admin/table?key=demo123');
-      const html = await res.text();
-      // Извличаме само <tr>…</tr> редовете с regex
-      const rows = html.match(/<tr>[\s\S]*?<\/tr>/g).slice(1);
-      document.getElementById('users-table').innerHTML = '<tr><th>ID</th><th>Потребител</th><th>Email</th><th>Парола</th></tr>' + rows.join('');
+      try {
+        // Викаме JSON ендпойнта за всички потребители (който връща и points)
+        const res = await fetch('/api/users?key=demo123', { credentials: 'include' });
+        if (!res.ok) throw new Error(await res.text());
+        const users = await res.json();
+  
+        // Рендерираме всеки ред, включително точките
+        const tbody = document.querySelector('#users-table');
+        tbody.innerHTML = `
+          <tr>
+            <th>ID</th><th>Потребител</th><th>Email</th><th>Парола</th><th>Точки</th>
+          </tr>
+          ${users.map(u => `
+            <tr>
+              <td>${u.id}</td>
+              <td>${u.username}</td>
+              <td>${u.email}</td>
+              <td><code>${u.password}</code></td>
+              <td>${u.points}</td>
+            </tr>
+          `).join('')}
+        `;
+      } catch (e) {
+        console.error('Неуспешно зареждане на потребители:', e);
+      }
     }
+  
+    // първо зареждане + всяка 6 сек.
     loadUsers();
-    setInterval(loadUsers, 6000); // всяка 6 секунди
+    setInterval(loadUsers, 6000);
+  
+  
+   
   </script>
 </body>
 </html>

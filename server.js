@@ -230,16 +230,7 @@ app.post('/login', (req, res) => {
   });
 });
 
-app.get('/api/users', (req, res) => {
-  if (req.query.key !== 'demo123') return res.status(401).send();
-  db.all(
-    "SELECT id, username, email, password FROM users",
-    (err, rows) => {
-      if (err) return res.status(500).send();
-      res.json(rows);
-    }
-  );
-});
+
 
 // Връща текущите точки
 app.get('/api/score', (req, res) => {
@@ -277,6 +268,13 @@ app.post('/api/score', express.json(), (req, res) => {
     }
   );
 });
+// По-строг рут за users.html със ключ
+app.get('/users.html', (req, res, next) => {
+  if (req.query.key !== 'demo123') {
+    return res.status(401).send('🚫 Forbidden');
+  }
+  next();
+});
 
 // Сервиране на статични файлове от папката public (HTML, CSS, JS, аудио, изображения и т.н.)
 app.use(express.static('public'));
@@ -312,6 +310,16 @@ app.get('/admin/table', (req, res) => {
     html += `</table></body></html>`;
     res.send(html);
   });
+});
+// Връща JSON масив с всички потребители и техните точки
+app.get('/api/users', (req, res) => {
+  db.all(
+    "SELECT id, username, email, password, points FROM users",
+    (err, rows) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(rows);
+    }
+  );
 });
 
 app.listen(port, () => {
