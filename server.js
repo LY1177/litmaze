@@ -9,7 +9,7 @@ const path = require('path');
 const app = express();
 const port = 3000;
 const bcrypt = require('bcrypt');
-// const saltRounds = 10;
+const saltRounds = 10;
 const fs   = require('fs');
 const sqlite3 = require('sqlite3').verbose();
 
@@ -40,10 +40,6 @@ const diskPath = path.join('/data', 'mydb.db');
 
 // 1) Ако на диска още няма база, копираме seed-а
 if (!fs.existsSync(diskPath)) {
-//   fs.copyFileSync(seedPath, diskPath);
-//   console.log('Seed-базата е копирана на persistent disk');
-// }
-// Безусловно копиране на всяко рестартиране
 try {
   fs.copyFileSync(seedPath, diskPath);
   console.log('✔ [SEED] Seed-базата е копирана на persistent disk');
