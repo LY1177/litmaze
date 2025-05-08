@@ -32,6 +32,7 @@ const fs   = require('fs');
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 
+
 // Път до seed-файла в репото
 const seedPath = path.join(__dirname, 'public', 'seed', 'mydb.db');
 // Път до persistent диска (монтиран в Render като /data)
