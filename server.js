@@ -9,7 +9,9 @@ const path = require('path');
 const app = express();
 const port = 3000;
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
+// const saltRounds = 10;
+const fs   = require('fs');
+const sqlite3 = require('sqlite3').verbose();
 
 // Отваряне на SQLite базата данни (mydb.db)
 // const db = new sqlite3.Database(path.join(__dirname, 'mydb.db'), (err) => {
@@ -28,9 +30,7 @@ const saltRounds = 10;
 //     console.log('SQLite базата данни е успешно отворена:', dbFile);
 //   }
 // });
-const fs   = require('fs');
 
-const sqlite3 = require('sqlite3').verbose();
 
 
 // Път до seed-файла в репото
@@ -39,10 +39,18 @@ const seedPath = path.join(__dirname, 'public', 'seed', 'mydb.db');
 const diskPath = path.join('/data', 'mydb.db');
 
 // 1) Ако на диска още няма база, копираме seed-а
-if (!fs.existsSync(diskPath)) {
+// if (!fs.existsSync(diskPath)) {
+//   fs.copyFileSync(seedPath, diskPath);
+//   console.log('Seed-базата е копирана на persistent disk');
+// }
+// Безусловно копиране на всяко рестартиране
+try {
   fs.copyFileSync(seedPath, diskPath);
-  console.log('Seed-базата е копирана на persistent disk');
+  console.log('✔ [SEED] Seed-базата е копирана на persistent disk');
+} catch (e) {
+  console.error('❌ [SEED] Не може да копира seed-базата:', e.message);
 }
+
 
 // 2) Отваряме вече базата на persistent disk
 const db = new sqlite3.Database(diskPath, err => {
