@@ -1,6 +1,5 @@
 // server.js
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
 
 const session = require('express-session');
 
@@ -21,12 +20,35 @@ const saltRounds = 10;
 //   }
 // });
 // Ползваме монтирания диск под /data
-const dbFile = path.join('/data', 'mydb.db');
-const db = new sqlite3.Database(dbFile, err => {
+// const dbFile = path.join('/data', 'mydb.db');
+// const db = new sqlite3.Database(dbFile, err => {
+//   if (err) {
+//     console.error('Не може да се отвори базата данни:', err.message);
+//   } else {
+//     console.log('SQLite базата данни е успешно отворена:', dbFile);
+//   }
+// });
+const fs   = require('fs');
+const path = require('path');
+const sqlite3 = require('sqlite3').verbose();
+
+// Път до seed-файла в репото
+const seedPath = path.join(__dirname, 'public', 'seed', 'mydb.db');
+// Път до persistent диска (монтиран в Render като /data)
+const diskPath = path.join('/data', 'mydb.db');
+
+// 1) Ако на диска още няма база, копираме seed-а
+if (!fs.existsSync(diskPath)) {
+  fs.copyFileSync(seedPath, diskPath);
+  console.log('Seed-базата е копирана на persistent disk');
+}
+
+// 2) Отваряме вече базата на persistent disk
+const db = new sqlite3.Database(diskPath, err => {
   if (err) {
-    console.error('Не може да се отвори базата данни:', err.message);
+    console.error('Не може да отвори persistent базата:', err.message);
   } else {
-    console.log('SQLite базата данни е успешно отворена:', dbFile);
+    console.log('SQLite базата е успешно отворена на:', diskPath);
   }
 });
 
