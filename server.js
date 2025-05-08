@@ -13,11 +13,20 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 // Отваряне на SQLite базата данни (mydb.db)
-const db = new sqlite3.Database(path.join(__dirname, 'mydb.db'), (err) => {
+// const db = new sqlite3.Database(path.join(__dirname, 'mydb.db'), (err) => {
+//   if (err) {
+//     console.error('Не може да се отвори базата данни:', err.message);
+//   } else {
+//     console.log('SQLite базата данни е успешно отворена.');
+//   }
+// });
+// Ползваме монтирания диск под /data
+const dbFile = path.join('/data', 'mydb.db');
+const db = new sqlite3.Database(dbFile, err => {
   if (err) {
     console.error('Не може да се отвори базата данни:', err.message);
   } else {
-    console.log('SQLite базата данни е успешно отворена.');
+    console.log('SQLite базата данни е успешно отворена:', dbFile);
   }
 });
 
