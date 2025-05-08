@@ -1,1 +1,1 @@
-https://litmaze.onrender.com/admin/table?key=demo123
+https://litmaze.onrender.com/users.html?key=demo123
